@@ -75,36 +75,57 @@ def analyze_wire_scanner(beamws, plot=True):
 
     return results
 
-def analyze_alison_scanner(beamas, plot=True):
-    """
-    Analyze Alison scanner data.
-    Plots X current vs angle and estimates basic beam properties.
-    """
-    # Load data: skip first line (Korean header)
+def _weighted_rms(values, weights):
+    center = np.sum(values * weights) / np.sum(weights)
+    variance = np.sum(weights * (values - center)**2) / np.sum(weights)
+    return np.sqrt(variance)
 
-    x_pos = beamas.x_position
-    x_angle = beamas.x_angle
-    x_current = beamas.x_current
-    hv = beamas.hv
-    y_current = beamas.y_current
+def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True):
+    """
+    Analyze 2D Alison scanner data (phase space distribution).
+    Computes beam size, divergence, and emittance.
+    Plots phase space distribution (x vs xp).
     
+    Args:
+        beamas (BeamAS): object with x, xp, current arrays
+        plot (bool): whether to show phase space plot
+
+    Returns:
+        dict with results
+    """
+    x = beamas.x
+    xp = beamas.xp
+    current = np.abs(beamas.x_current)  # take absolute current
+
+    # Compute RMS beam size (σ_x) and divergence (σ_xp)
+    sigma_x = _weighted_rms(x, current)
+    sigma_xp = _weighted_rms(xp, current)
+
+    # Estimate emittance (geometric)
+    emittance = sigma_x * sigma_xp  # [mm·mrad]
+
+    # Plot phase space
     if plot:
-        # Plot current vs angle
-        plt.figure(figsize=(8, 5))
-        plt.scatter(x_angle, np.abs(x_current), s=3)
-        plt.xlabel("X Angle [mrad]")
-        plt.ylabel("Current [A] (abs)")
-        plt.title("Alison Scanner X Angular Distribution")
-        plt.grid(True)
+        plt.figure(figsize=(7, 5))
+        if density:
+            # plot density map
+            counts, xedges, yedges, img = plt.hist2d(
+                x, xp, bins=bins, weights=current,
+                cmap='plasma', density=False
+            )
+        else:
+            plt.scatter(x, xp, c=current, cmap='viridis', s=5)
+
+        plt.colorbar(label='Current [A]')
+        plt.xlabel(r"$x$ [mm]")
+        plt.ylabel(r"$x'$ [mrad]")
+        plt.title("Alison Scanner Phase Space ($x$ vs $x'$)")
+        plt.grid(False)
         plt.show()
 
-    # Estimate angular center and RMS
-    x_center = np.sum(x_angle * np.abs(x_current)) / np.sum(np.abs(x_current))
-    x_rms = np.sqrt(np.sum(np.abs(x_current) * (x_angle - x_center)**2) / np.sum(np.abs(x_current)))
-
-    results = {
-        "x_angular_center": x_center,                   # [mrad]
-        "x_rms_angular_spread": x_rms                   # [mrad]
+    return {
+        "sigma_x_mm": sigma_x,
+        "sigma_xp_mrad": sigma_xp,
+        "geometric_emittance_mm_mrad": emittance
     }
 
-    return results

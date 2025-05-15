@@ -46,7 +46,7 @@ def read_wire_scanner(filename: str) -> BeamWS:
     return beam_ws
 
 def read_alison_scanner(filename: str) -> BeamAS:
-    columns = ["x_position", "x_angle", "x_current", "hv", "y_current"]
+    columns = ["x", "xp", "x_current", "hv", "y_current"]
     df_particles = pd.read_csv(filename, sep='\s+', skiprows=1, names=columns, engine='python')
     
     scan_id = splitext(basename(filename))[0]
