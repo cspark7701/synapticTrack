@@ -1,1 +1,1 @@
-from .scanner import *
+from .scanner_analysis import *

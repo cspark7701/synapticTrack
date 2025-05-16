@@ -28,9 +28,12 @@ dependencies = [
 #Documentation = "https://github.com/your-org/synaptictrack/docs"
 #Source = "https://github.com/your-org/synaptictrack"
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+
 [tool.setuptools.packages.find]
-where = ["src"]         # ✅ tell setuptools to look under src/
-include = ["synaptictrack*"]  # ✅ explicitly include your package
+where = ["src"]
+include = ["synaptictrack*"]
 
 [project.scripts]
 synaptictrack = "synaptictrack.cli:app"

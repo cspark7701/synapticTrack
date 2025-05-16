@@ -2,7 +2,7 @@ import typer
 import pandas as pd
 from synaptictrack import pipeline
 from synaptictrack.beam.beam_scanner import BeamWS, BeamAS2D
-from synaptictrack.analysis.scanner import analyze_wire_scanner, analyze_alison_scanner_2d
+from synaptictrack.analysis.scanner_analysis import analyze_wire_scanner, analyze_alison_scanner_2d
 
 app = typer.Typer()
 
