@@ -3,7 +3,6 @@ from h5py import h5
 import sqlite3 as sql3
 from os.path import *
 from synaptictrack.beam import Beam, BeamWS, BeamAS
-from synaptictrack.beam import BeamWS
 
 def read_track(filename: str, mass_number: int, charge_state: int, beam_current: float) -> Beam:
     columns = ["Nseed", "iq", "dt", "dW", "x", "xp", "y", "yp"]
