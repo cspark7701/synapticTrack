@@ -5,14 +5,12 @@ import pandas as pd
 from scipy.optimize import curve_fit
 
 import matplotlib.pyplot as plt
-from matplotlib import gridspec
 
 from synaptictrack.beam import BeamWS
+from synaptictrack.utils import gaussian
+from synaptictrack.visualizations import wire_scanner_plot, alison_scanner_plot
 
-def gaussian(x, a, x0, sigma, offset):
-    return a * np.exp(-(x - x0)**2 / (2 * sigma**2)) + offset
-
-def analyze_wire_scanner(beamws, plot=True):
+def analyze_wire_scanner(beamws, plot=True) -> dict:
     """
     Analyze wire scanner data from file.
     Returns: X and Y beam size (RMS, Gaussian fit)
@@ -45,6 +43,10 @@ def analyze_wire_scanner(beamws, plot=True):
     y_sigma_fit = np.abs(popt_y[2])
 
     if plot:
+        wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y)
+
+    """
+    if plot:
         fig, axs = plt.subplots(1, 2, figsize=(12, 5))
 
         axs[0].plot(x_pos, np.abs(x_curr), 'o', label='Data')
@@ -65,6 +67,7 @@ def analyze_wire_scanner(beamws, plot=True):
 
         plt.tight_layout()
         plt.show()
+    """
 
     results = {
         "x_rms": x_rms,
@@ -75,20 +78,26 @@ def analyze_wire_scanner(beamws, plot=True):
 
     return results
 
-def _weighted_rms(values, weights):
+import numpy as np
+import matplotlib.pyplot as plt
+
+def _weighted_rms_and_center(values, weights):
+    """Return center and RMS."""
     center = np.sum(values * weights) / np.sum(weights)
     variance = np.sum(weights * (values - center)**2) / np.sum(weights)
-    return np.sqrt(variance)
+    return center, np.sqrt(variance)
 
-def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True):
+def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True) -> dict:
     """
     Analyze 2D Alison scanner data (phase space distribution).
-    Computes beam size, divergence, and emittance.
+    Computes beam center, beam size, divergence, and emittance.
     Plots phase space distribution (x vs xp).
     
     Args:
         beamas (BeamAS): object with x, xp, current arrays
         plot (bool): whether to show phase space plot
+        bins (int): number of bins for histogram
+        density (bool): if True, plot density map, else scatter plot
 
     Returns:
         dict with results
@@ -97,13 +106,17 @@ def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True):
     xp = beamas.xp
     current = np.abs(beamas.x_current)  # take absolute current
 
-    # Compute RMS beam size (σ_x) and divergence (σ_xp)
-    sigma_x = _weighted_rms(x, current)
-    sigma_xp = _weighted_rms(xp, current)
+    # Compute beam center and RMS
+    x_center, sigma_x = _weighted_rms_and_center(x, current)
+    xp_center, sigma_xp = _weighted_rms_and_center(xp, current)
 
     # Estimate emittance (geometric)
     emittance = sigma_x * sigma_xp  # [mm·mrad]
 
+    if plot:
+        alison_scanner_plot(x, xp, x_center, xp_center, current, density, bins)
+
+    """
     # Plot phase space
     if plot:
         plt.figure(figsize=(7, 5))
@@ -113,17 +126,25 @@ def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True):
                 x, xp, bins=bins, weights=current,
                 cmap='plasma', density=False
             )
+            plt.colorbar(label='Current [A]')
         else:
             plt.scatter(x, xp, c=current, cmap='viridis', s=5)
+            plt.colorbar(label='Current [A]')
 
-        plt.colorbar(label='Current [A]')
+        # Plot beam center
+        plt.plot(x_center, xp_center, 'wo', markersize=6, label="Beam Center")
+        plt.legend()
+
         plt.xlabel(r"$x$ [mm]")
         plt.ylabel(r"$x'$ [mrad]")
         plt.title("Alison Scanner Phase Space ($x$ vs $x'$)")
         plt.grid(False)
         plt.show()
+    """
 
     return {
+        "x_center_mm": x_center,
+        "xp_center_mrad": xp_center,
         "sigma_x_mm": sigma_x,
         "sigma_xp_mrad": sigma_xp,
         "geometric_emittance_mm_mrad": emittance
