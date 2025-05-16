@@ -1,1 +1,1 @@
-from .math import *
+from .math_functions import *
