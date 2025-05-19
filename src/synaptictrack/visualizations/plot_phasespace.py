@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-def phasespace_plot(x, xp, xyrange=None, title=None, nbins=200, projection=1, density=True, cmap='viridis', figname=None):
+def phasespace_plot(x, xp, x_center=None, xp_center=None, xyrange=None, title=None, nbins=200, projection=1, density=True, cmap='viridis', figname=None):
     """
     Generates a phase space plot with projections.
 
@@ -41,7 +41,7 @@ def phasespace_plot(x, xp, xyrange=None, title=None, nbins=200, projection=1, de
         ax_histx = fig.add_subplot(gs[0, 0], sharex=ax_main)
         ax_histy = fig.add_subplot(gs[1, 1], sharey=ax_main)
     else:
-        ax_main = fig.add_subplot(gs[1, 0])  # , sharex=ax_histx) # Removed sharex
+        ax_main = fig.add_subplot(gs[1, 0])
         ax_histx = ax_main.twinx()
         ax_histy = ax_main.twiny()
 
@@ -53,6 +53,10 @@ def phasespace_plot(x, xp, xyrange=None, title=None, nbins=200, projection=1, de
         fig.colorbar(im, cax=cax, label='Density') #Associate the colorbar to the hist2d
     else:
         ax_main.scatter(x, xp, s=3)
+
+    if x_center is not None and xp_center is not None:
+        ax_main.plot(x_center, xp_center, 'ro', markersize=6, label="Beam Center")
+        ax_main.legend()
         
     ax_main.set_xlabel(r'$x$ [mm]', fontsize=14)
     ax_main.set_ylabel(r"$x'$ [mrad]", fontsize=14)

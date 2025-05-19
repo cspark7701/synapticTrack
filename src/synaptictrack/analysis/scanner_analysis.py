@@ -4,82 +4,9 @@ import pandas as pd
 
 from scipy.optimize import curve_fit
 
-import matplotlib.pyplot as plt
-
-from synaptictrack.beam import BeamWS
+#from synaptictrack.beam import BeamWS
 from synaptictrack.utils import gaussian
 from synaptictrack.visualizations import wire_scanner_plot, alison_scanner_plot
-
-def analyze_wire_scanner(beamws, plot=True) -> dict:
-    """
-    Analyze wire scanner data from file.
-    Returns: X and Y beam size (RMS, Gaussian fit)
-    """
-
-    x_pos = beamws.x_position
-    x_curr = beamws.x_current
-    y_pos = beamws.y_position
-    y_curr = beamws.y_current
-
-    # Remove repeated scans if any
-    unique_x = np.unique(x_pos, return_index=True)[1]
-    unique_y = np.unique(y_pos, return_index=True)[1]
-    x_pos, x_curr = x_pos[unique_x], x_curr[unique_x]
-    y_pos, y_curr = y_pos[unique_y], y_curr[unique_y]
-
-    # Compute RMS beam sizes
-    x_center = np.sum(x_pos * np.abs(x_curr)) / np.sum(np.abs(x_curr))
-    y_center = np.sum(y_pos * np.abs(y_curr)) / np.sum(np.abs(y_curr))
-    x_rms = np.sqrt(np.sum(np.abs(x_curr) * (x_pos - x_center)**2) / np.sum(np.abs(x_curr)))
-    y_rms = np.sqrt(np.sum(np.abs(y_curr) * (y_pos - y_center)**2) / np.sum(np.abs(y_curr)))
-
-    # Gaussian fit
-    popt_x, _ = curve_fit(gaussian, x_pos, np.abs(x_curr), 
-                          p0=[np.max(np.abs(x_curr)), x_center, x_rms, 0])
-    popt_y, _ = curve_fit(gaussian, y_pos, np.abs(y_curr), 
-                          p0=[np.max(np.abs(y_curr)), y_center, y_rms, 0])
-
-    x_sigma_fit = np.abs(popt_x[2])
-    y_sigma_fit = np.abs(popt_y[2])
-
-    if plot:
-        wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y)
-
-    """
-    if plot:
-        fig, axs = plt.subplots(1, 2, figsize=(12, 5))
-
-        axs[0].plot(x_pos, np.abs(x_curr), 'o', label='Data')
-        axs[0].plot(x_pos, gaussian(x_pos, *popt_x), '-', label='Gaussian Fit')
-        axs[0].set_title("X Wire Scanner")
-        axs[0].set_xlabel("Position [mm]")
-        axs[0].set_ylabel("Current [A]")
-        axs[0].legend()
-        axs[0].grid(True)
-
-        axs[1].plot(y_pos, np.abs(y_curr), 'o', label='Data')
-        axs[1].plot(y_pos, gaussian(y_pos, *popt_y), '-', label='Gaussian Fit')
-        axs[1].set_title("Y Wire Scanner")
-        axs[1].set_xlabel("Position [mm]")
-        axs[1].set_ylabel("Current [A]")
-        axs[1].legend()
-        axs[1].grid(True)
-
-        plt.tight_layout()
-        plt.show()
-    """
-
-    results = {
-        "x_rms": x_rms,
-        "y_rms": y_rms,
-        "x_gaussian_sigma": x_sigma_fit,
-        "y_gaussian_sigma": y_sigma_fit
-    }
-
-    return results
-
-import numpy as np
-import matplotlib.pyplot as plt
 
 def _weighted_rms_and_center(values, weights):
     """Return center and RMS."""
@@ -87,7 +14,59 @@ def _weighted_rms_and_center(values, weights):
     variance = np.sum(weights * (values - center)**2) / np.sum(weights)
     return center, np.sqrt(variance)
 
-def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True) -> dict:
+def analyze_wire_scanner(beamws, plot=True) -> dict:
+    """
+    Analyze Wire scanner data
+    Computes beam profile Gaussian fit 
+    Plots beam profile
+    
+    Args:
+        beamas (BeamWS): object with x_position, x_current, y_position, y_current array
+        plot (bool): whether to show phase space plot
+
+    Returns:
+        dict with results
+    """
+
+    x = beamws.x_position
+    ix = beamws.x_current
+    y = beamws.y_position
+    iy = beamws.y_current
+
+    # Remove repeated scans if any
+    unique_x = np.unique(x, return_index=True)[1]
+    unique_y = np.unique(y, return_index=True)[1]
+    x, ix = x[unique_x], ix[unique_x]
+    y, iy = y[unique_y], iy[unique_y]
+
+    # Compute RMS beam sizes
+    x_center, sigma_x = _weighted_rms_and_center(x, ix)
+    y_center, sigma_y = _weighted_rms_and_center(y, iy)
+
+    # Gaussian fit
+    popt_x, _ = curve_fit(gaussian, x, np.abs(ix), 
+                          p0=[np.max(np.abs(ix)), x_center, sigma_x, 0])
+    popt_y, _ = curve_fit(gaussian, y, np.abs(iy), 
+                          p0=[np.max(np.abs(iy)), y_center, sigma_y, 0])
+
+    sigma_x_fit = np.abs(popt_x[2])
+    sigma_y_fit = np.abs(popt_y[2])
+
+    if plot:
+        wire_scanner_plot(x, ix, popt_x, y, iy, popt_y)
+
+    results = {
+        "x_center": x_center,
+        "y_center": y_center,
+        "sigma_x": sigma_x,
+        "sigma_y": sigma_y,
+        "gaussian_sigma_x_fit": sigma_x_fit,
+        "gaussian_sigma_y_fit": sigma_y_fit
+    }
+
+    return results
+
+def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True, projection=True) -> dict:
     """
     Analyze 2D Alison scanner data (phase space distribution).
     Computes beam center, beam size, divergence, and emittance.
@@ -113,40 +92,26 @@ def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True) -> dict
     # Estimate emittance (geometric)
     emittance = sigma_x * sigma_xp  # [mm·mrad]
 
+    # Gaussian fit
+    popt_x, _ = curve_fit(gaussian, x, np.abs(current),
+                          p0=[np.max(np.abs(current)), x_center, sigma_x, 0])
+    popt_xp, _ = curve_fit(gaussian, xp, np.abs(current),
+                          p0=[np.max(np.abs(current)), xp_center, sigma_xp, 0])
+
+    sigma_x_fit = np.abs(popt_x[2])
+    sigma_xp_fit = np.abs(popt_xp[2])
+
+
     if plot:
-        alison_scanner_plot(x, xp, x_center, xp_center, current, density, bins)
-
-    """
-    # Plot phase space
-    if plot:
-        plt.figure(figsize=(7, 5))
-        if density:
-            # plot density map
-            counts, xedges, yedges, img = plt.hist2d(
-                x, xp, bins=bins, weights=current,
-                cmap='plasma', density=False
-            )
-            plt.colorbar(label='Current [A]')
-        else:
-            plt.scatter(x, xp, c=current, cmap='viridis', s=5)
-            plt.colorbar(label='Current [A]')
-
-        # Plot beam center
-        plt.plot(x_center, xp_center, 'wo', markersize=6, label="Beam Center")
-        plt.legend()
-
-        plt.xlabel(r"$x$ [mm]")
-        plt.ylabel(r"$x'$ [mrad]")
-        plt.title("Alison Scanner Phase Space ($x$ vs $x'$)")
-        plt.grid(False)
-        plt.show()
-    """
+        alison_scanner_plot(x, xp, x_center, xp_center, current, density, bins, projection)
 
     return {
-        "x_center_mm": x_center,
-        "xp_center_mrad": xp_center,
-        "sigma_x_mm": sigma_x,
-        "sigma_xp_mrad": sigma_xp,
-        "geometric_emittance_mm_mrad": emittance
+        "x_center": x_center,
+        "xp_center": xp_center,
+        "sigma_x": sigma_x,
+        "sigma_xp": sigma_xp,
+        "gaussian_sigma_x_fit": sigma_x_fit,
+        "gaussian_sigma_xp_fit": sigma_xp_fit,
+        "geometric_emittance": emittance
     }
 
