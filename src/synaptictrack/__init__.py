@@ -5,4 +5,3 @@ from .correction import *
 from .ml import *
 from .utils import *
 from .visualizations import *
-import pipeline
