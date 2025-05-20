@@ -4,7 +4,6 @@ import pandas as pd
 
 from scipy.optimize import curve_fit
 
-#from synaptictrack.beam import BeamWS
 from synaptictrack.utils import gaussian
 from synaptictrack.visualizations import wire_scanner_plot, alison_scanner_plot
 

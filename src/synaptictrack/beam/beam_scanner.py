@@ -59,9 +59,6 @@ class BeamWS:
             "y_range_mm": (self.y_position.min(), self.y_position.max())
         }
 
-
-import pandas as pd
-
 class BeamAS:
     def __init__(self, data, scan_id=None):
         """
