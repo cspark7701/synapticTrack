@@ -37,7 +37,6 @@ def wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y):
     axs[1].grid(True)
 
     plt.tight_layout()
-    plt.show()
 
 def alison_scanner_plot(x, xp, x_center, xp_center, current, density=True, bins=150, projection=True):
     """
@@ -99,6 +98,4 @@ def alison_scanner_plot(x, xp, x_center, xp_center, current, density=True, bins=
     else:
         ax_histx.axis('off')
         ax_histy.axis('off')
-
-    plt.show()
 

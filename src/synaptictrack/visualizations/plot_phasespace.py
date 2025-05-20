@@ -1,7 +1,10 @@
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-def phasespace_plot(x, xp, x_center=None, xp_center=None, xyrange=None, title=None, nbins=200, projection=1, density=True, cmap='viridis', figname=None):
+from synaptictrack.beam import Twiss
+
+def phasespace_plot(x, xp, x_center=None, xp_center=None, xyrange=None, title=None, nbins=200, projection=1, ellipse=False, density=True, cmap='viridis', figname=None):
     """
     Generates a phase space plot with projections.
 
@@ -80,6 +83,9 @@ def phasespace_plot(x, xp, x_center=None, xp_center=None, xyrange=None, title=No
         ax_histx.set_ylim(0, ax_histx.get_ylim()[1]*projection)
         ax_histy.set_xlim(0, ax_histy.get_xlim()[1]*projection)
 
+    if ellipse:
+        plot_ellipse_from_twiss(x, xp, ax_main)
+
     # Set title
     if title:
         ax_histx.set_title(title, fontsize=14)
@@ -87,4 +93,81 @@ def phasespace_plot(x, xp, x_center=None, xp_center=None, xyrange=None, title=No
     # Save figure
     if figname:
         plt.savefig(figname, dpi=fig.dpi)
-#    plt.show()
+
+def compute_mahalanobis_squared(x, xp, twiss_param):
+    emit = twiss_param['emittance']
+    alpha = twiss_param['alpha']
+    beta = twiss_param['beta']
+    gamma = twiss_param['gamma']
+
+    return (gamma * x**2 + 2 * alpha * x * xp + beta * xp**2) / emit
+
+def get_threshold(d_squared, percentile=0.9):
+    sorted_vals = np.sort(d_squared)
+    index = int(percentile * len(sorted_vals))
+    return sorted_vals[index]
+
+def plot_percentile_ellipse(x, xp, ax=None, percentile=0.9, npts=200, color='oragne'):
+    twiss_param = Twiss.compute_twiss(x, xp)
+    
+    emit = twiss_param["emittance"]
+    alpha = twiss_param["alpha"]
+    beta = twiss_param["beta"]
+    gamma = twiss_param['gamma']
+
+    # Compute Mahalanobis distance for all particles
+    d2 = compute_mahalanobis_squared(x, xp, twiss_param)
+    threshold = get_threshold(d2, percentile)
+
+    # Scale emittance to match desired contour
+    scaled_emit = emit * threshold
+
+    # Ellipse parametric plot
+    theta = np.linspace(0, 2 * np.pi, npts)
+    u = np.sqrt(scaled_emit * beta) * np.cos(theta)
+    up = -np.sqrt(scaled_emit / beta) * (alpha * np.cos(theta) + np.sin(theta))
+
+    if ax is not None:
+        ax.plot(u, up, '--', color=color, label=f"{int(percentile * 100)}% Ellipse")
+    else:
+        plt.figure(figsize=(6, 5))
+        plt.plot(u, up, '-', color='orange', label='Twiss Ellipse')
+        plt.xlabel("u [mm]")
+        plt.ylabel("u' [mrad]")
+        plt.grid(True)
+        plt.axis('equal')
+        plt.legend()
+        plt.tight_layout()
+
+def plot_ellipse_from_twiss(x, xp, ax=None, npts=200):
+    """
+    Plot the phase space ellipse from computed Twiss parameters.
+
+    Args:
+        x (array-like): Position values
+        xp (array-like): Divergence or angle values
+        ax (matplotlib.axes.Axes or None): Axis to plot on. If None, uses plt.
+        npts (int): Number of points on the ellipse
+    """
+    twiss_param = Twiss.compute_twiss(x, xp)
+
+    emit = twiss_param["emittance"]
+    alpha = twiss_param["alpha"]
+    beta = twiss_param["beta"]
+
+    theta = np.linspace(0, 2 * np.pi, npts)
+    u = np.sqrt(emit * beta) * np.cos(theta)
+    up = -np.sqrt(emit / beta) * (alpha * np.cos(theta) + np.sin(theta))
+
+    if ax is not None:
+        ax.plot(u, up, '-', color='orange', label='Twiss Ellipse')
+    else:
+        plt.figure(figsize=(6, 5))
+        plt.plot(u, up, '-', color='orange', label='Twiss Ellipse')
+        plt.xlabel("u [mm]")
+        plt.ylabel("u' [mrad]")
+        plt.grid(True)
+        plt.axis('equal')
+        plt.legend()
+        plt.tight_layout()
+
