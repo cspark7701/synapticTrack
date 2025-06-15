@@ -5,7 +5,7 @@ from matplotlib import gridspec
 from synaptictrack.utils import gaussian
 from synaptictrack.visualizations.plot_phasespace import phasespace_plot
 
-def wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y):
+def wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y, filename):
     """
     Plot wire scanner data for X and Y axes with Gaussian fits.
 
@@ -38,9 +38,12 @@ def wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y):
 
     plt.tight_layout()
 
-def alison_scanner_plot(x, xp, x_center, xp_center, current, density=True, bins=150, projection=True):
+    if filename is not None:
+        plt.savefig(filename, dpi=fig.dpi)
+
+def allison_scanner_plot(x, xp, x_center, xp_center, current, density=True, bins=150, projection=True, filename=None):
     """
-    Plot 2D phase space from Alison scanner data with optional projections.
+    Plot 2D phase space from Allison scanner data with optional projections.
     
     Args:
         x (array): Position in mm
@@ -77,7 +80,7 @@ def alison_scanner_plot(x, xp, x_center, xp_center, current, density=True, bins=
     ax_main.legend()
     ax_main.set_xlabel(r"$x$ [mm]")
     ax_main.set_ylabel(r"$x'$ [mrad]")
-    ax_main.set_title("Alison Scanner Phase Space")
+    ax_main.set_title("Allison Scanner Phase Space")
 
     # Projections (weighted histograms)
     if projection:
@@ -98,4 +101,7 @@ def alison_scanner_plot(x, xp, x_center, xp_center, current, density=True, bins=
     else:
         ax_histx.axis('off')
         ax_histy.axis('off')
+
+    if filename is not None:
+        plt.savefig(filename, dpi=fig.dpi)
 

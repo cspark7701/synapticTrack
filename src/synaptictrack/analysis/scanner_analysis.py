@@ -5,7 +5,7 @@ import pandas as pd
 from scipy.optimize import curve_fit
 
 from synaptictrack.utils import gaussian
-from synaptictrack.visualizations import wire_scanner_plot, alison_scanner_plot
+from synaptictrack.visualizations import wire_scanner_plot, allison_scanner_plot
 
 def _weighted_rms_and_center(values, weights):
     """Return center and RMS."""
@@ -13,7 +13,7 @@ def _weighted_rms_and_center(values, weights):
     variance = np.sum(weights * (values - center)**2) / np.sum(weights)
     return center, np.sqrt(variance)
 
-def analyze_wire_scanner(beamws, plot=True) -> dict:
+def analyze_wire_scanner(beamws, plot=True, filename=None) -> dict:
     """
     Analyze Wire scanner data
     Computes beam profile Gaussian fit 
@@ -52,7 +52,7 @@ def analyze_wire_scanner(beamws, plot=True) -> dict:
     sigma_y_fit = np.abs(popt_y[2])
 
     if plot:
-        wire_scanner_plot(x, ix, popt_x, y, iy, popt_y)
+        wire_scanner_plot(x, ix, popt_x, y, iy, popt_y, filename)
 
     results = {
         "x_center": x_center,
@@ -65,9 +65,9 @@ def analyze_wire_scanner(beamws, plot=True) -> dict:
 
     return results
 
-def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True, projection=True) -> dict:
+def analyze_allison_scanner_2d(beamas, plot=True, bins=150, density=True, projection=True, filename=None) -> dict:
     """
-    Analyze 2D Alison scanner data (phase space distribution).
+    Analyze 2D Allison scanner data (phase space distribution).
     Computes beam center, beam size, divergence, and emittance.
     Plots phase space distribution (x vs xp).
     
@@ -102,7 +102,7 @@ def analyze_alison_scanner_2d(beamas, plot=True, bins=150, density=True, project
 
 
     if plot:
-        alison_scanner_plot(x, xp, x_center, xp_center, current, density, bins, projection)
+        allison_scanner_plot(x, xp, x_center, xp_center, current, density, bins, projection, filename)
 
     return {
         "x_center": x_center,

@@ -4,7 +4,7 @@ import matplotlib.gridspec as gridspec
 
 from synaptictrack.beam import Twiss
 
-def phasespace_plot(x, xp, x_center=None, xp_center=None, xyrange=None, title=None, nbins=200, projection=1, ellipse=False, density=True, cmap='viridis', figname=None):
+def phasespace_plot(x, xp, x_center=None, y_center=None, xyrange=None, title=None, xlabel=None, ylabel=None, nbins=200, projection=1, ellipse=False, density=True, cmap='viridis', figname=None):
     """
     Generates a phase space plot with projections.
 
@@ -13,6 +13,8 @@ def phasespace_plot(x, xp, x_center=None, xp_center=None, xyrange=None, title=No
         xp (array-like): x' (divergence) coordinates.
         xyrange (list, optional): [xmin, xmax, ymin, ymax]. Defaults to [-10, 10, -10, 10].
         title (str, optional): Plot title. Defaults to None.
+        xlabel (str, optional): x-axis label. Defaults to None.
+        ylabel (str, optional): y-axis label. Defaulst to None.
         nbins (int, optional): Number of bins for histograms. Defaults to 200.
         projection (int, optional) : places of projection plots (outside(0)or inside(1)) Default is outside.
         density (bool, optional): Use hist2d (True) or scatter (False). Defaults to True.
@@ -57,12 +59,12 @@ def phasespace_plot(x, xp, x_center=None, xp_center=None, xyrange=None, title=No
     else:
         ax_main.scatter(x, xp, s=3)
 
-    if x_center is not None and xp_center is not None:
-        ax_main.plot(x_center, xp_center, 'ro', markersize=6, label="Beam Center")
+    if x_center is not None and y_center is not None:
+        ax_main.plot(x_center, y_center, 'ro', markersize=6, label="Beam Center")
         ax_main.legend()
         
-    ax_main.set_xlabel(r'$x$ [mm]', fontsize=14)
-    ax_main.set_ylabel(r"$x'$ [mrad]", fontsize=14)
+    ax_main.set_xlabel(xlabel, fontsize=14)
+    ax_main.set_ylabel(ylabel, fontsize=14)
     ax_main.set_xlim([xmin, xmax])
     ax_main.set_ylim([ymin, ymax])
     ax_main.grid(True)
