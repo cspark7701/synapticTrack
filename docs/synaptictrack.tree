@@ -1,0 +1,28 @@
+src/synaptictrack
+├── analysis
+│   ├── __init__.py
+│   └── scanner_analysis.py
+├── beam
+│   ├── beam_data_io.py
+│   ├── beam.py
+│   ├── beam_scanner.py
+│   ├── __init__.py
+│   └── twiss.py
+├── cli.py
+├── config
+│   └── __init__.py
+├── correction
+│   └── __init__.py
+├── __init__.py
+├── ml
+│   └── __init__.py
+├── pipeline.py
+├── track
+├── utils
+│   ├── __init__.py
+│   ├── math_functions.py
+│   └── stats.py
+└── visualizations
+    ├── __init__.py
+    ├── plot_phasespace.py
+    └── plot_scanner.py
