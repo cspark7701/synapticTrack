@@ -2,7 +2,7 @@ import typer
 import pandas as pd
 from synaptictrack import pipeline
 from synaptictrack.beam.beam_scanner import BeamWS, BeamAS2D
-from synaptictrack.analysis.scanner_analysis import analyze_wire_scanner, analyze_alison_scanner_2d
+from synaptictrack.analysis.scanner_analysis import analyze_wire_scanner, analyze_allison_scanner_2d
 
 app = typer.Typer()
 
@@ -14,7 +14,7 @@ def run(input_file: str, model_file: str = None):
 @app.command()
 def analyze(scanner: str, file: str, bins: int = 150, plot: bool = True):
     """
-    Analyze beam data from wire or alison scanner.
+    Analyze beam data from wire or allison scanner.
     """
     typer.echo(f"Analyzing {scanner} scanner data from {file}")
     if scanner == "wire":
@@ -22,14 +22,14 @@ def analyze(scanner: str, file: str, bins: int = 150, plot: bool = True):
                          names=['x_pos', 'x_current', 'y_pos', 'y_current', 'd_pos', 'd_current'])
         scan = BeamWS(df, scan_id=file)
         results = analyze_wire_scanner(scan, plot=plot)
-    elif scanner == "alison":
+    elif scanner == "allison":
         df = pd.read_csv(file, skiprows=1, sep='\\s+',
                          names=['x', 'xp', 'current', 'hv', 'y_current'])
         df = df[['x', 'xp', 'current']]
         scan = BeamAS2D(df, scan_id=file)
-        results = analyze_alison_scanner_2d(scan, bins=bins, plot=plot)
+        results = analyze_allison_scanner_2d(scan, bins=bins, plot=plot)
     else:
-        typer.echo("Invalid scanner type. Choose 'wire' or 'alison'.")
+        typer.echo("Invalid scanner type. Choose 'wire' or 'allison'.")
         raise typer.Exit(code=1)
 
     for k, v in results.items():

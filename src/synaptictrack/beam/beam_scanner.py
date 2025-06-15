@@ -62,10 +62,10 @@ class BeamWS:
 class BeamAS:
     def __init__(self, data, scan_id=None):
         """
-        Initializes a BeamAS object for 2D Alison scanner data.
+        Initializes a BeamAS object for 2D Allison scanner data.
 
         Args:
-            data (pd.DataFrame): DataFrame with Alison scanner data.
+            data (pd.DataFrame): DataFrame with Allison scanner data.
                                  Required columns: ['x', 'xp', 'current']
             scan_id (str, optional): Identifier for this scan (e.g. filename, run ID).
         """
@@ -82,7 +82,7 @@ class BeamAS:
 
     @property
     def data(self):
-        """Returns full Alison scanner DataFrame."""
+        """Returns full Allison scanner DataFrame."""
         return self._data
 
     @property

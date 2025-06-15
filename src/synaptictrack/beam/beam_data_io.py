@@ -44,7 +44,7 @@ def read_wire_scanner(filename: str) -> BeamWS:
 
     return beam_ws
 
-def read_alison_scanner(filename: str) -> BeamAS:
+def read_allison_scanner(filename: str) -> BeamAS:
     columns = ["x", "xp", "x_current", "hv", "y_current"]
     df_particles = pd.read_csv(filename, sep='\s+', skiprows=1, names=columns, engine='python')
     
@@ -57,7 +57,7 @@ def read_alison_scanner(filename: str) -> BeamAS:
 class BeamDataIO:
     _codes = ['track', 'opal', 'flame']
     _formats = ['hdf5', 'sqlite']
-    _scanners = ['wire', 'alison']
+    _scanners = ['wire', 'allison']
 
     def __init__(self):
         self._code_readers = {'track': read_track, 'opal': read_opal, 'flame': read_flame}
@@ -66,8 +66,8 @@ class BeamDataIO:
         self._file_readers = {'hdf5': read_h5, 'sqlite': read_sqlite}
         self._file_writers = {'hdf5': self.write_h5, 'sqlite': self.write_sqlite}
 
-        self._scanner_readers = {'wire': read_wire_scanner, 'alison': read_alison_scanner}
-        #self._scanner_writers = {'wire': self.write_wire_scanner, 'alison': write_alison_scanner}
+        self._scanner_readers = {'wire': read_wire_scanner, 'allison': read_allison_scanner}
+        #self._scanner_writers = {'wire': self.write_wire_scanner, 'allison': write_allison_scanner}
 
     def check_supported_codes(self, code):
         if code in self.supported_codes():
@@ -110,7 +110,7 @@ class BeamDataIO:
         Reads beam scanner data from a file.
 
         Args:
-            scanner (str): scanner type ('wire', 'alison')
+            scanner (str): scanner type ('wire', 'allison')
             filename (str): The name of the file to read.
 
         Returns:
