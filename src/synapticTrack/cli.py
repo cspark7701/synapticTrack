@@ -1,14 +1,14 @@
 import typer
 import pandas as pd
-from synaptictrack import pipeline
-from synaptictrack.beam.beam_scanner import BeamWS, BeamAS2D
-from synaptictrack.analysis.scanner_analysis import analyze_wire_scanner, analyze_allison_scanner_2d
+from synapticTrack import pipeline
+from synapticTrack.beam.beam_scanner import BeamWS, BeamAS2D
+from synapticTrack.analysis.scanner_analysis import analyze_wire_scanner, analyze_allison_scanner_2d
 
 app = typer.Typer()
 
 @app.command()
 def run(input_file: str, model_file: str = None):
-    """Run full synaptictrack pipeline"""
+    """Run full synapticTrack pipeline"""
     pipeline.run_all(input_file, model_file)
 
 @app.command()

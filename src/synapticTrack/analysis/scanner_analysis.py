@@ -4,8 +4,8 @@ import pandas as pd
 
 from scipy.optimize import curve_fit
 
-from synaptictrack.utils import gaussian
-from synaptictrack.visualizations import wire_scanner_plot, allison_scanner_plot
+from synapticTrack.utils import gaussian
+from synapticTrack.visualizations import wire_scanner_plot, allison_scanner_plot
 
 def _weighted_rms_and_center(values, weights):
     """Return center and RMS."""

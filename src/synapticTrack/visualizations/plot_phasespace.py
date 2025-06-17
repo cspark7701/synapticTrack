@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-from synaptictrack.beam import Twiss
+from synapticTrack.beam import Twiss
 
 def phasespace_plot(x, xp, x_center=None, y_center=None, xyrange=None, title=None, xlabel=None, ylabel=None, nbins=200, projection=1, ellipse=False, density=True, cmap='viridis', figname=None):
     """

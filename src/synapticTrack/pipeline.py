@@ -1,14 +1,14 @@
-# src/synaptictrack/pipeline.py
+# src/synapticTrack/pipeline.py
 
-from synaptictrack.beam import track_reader #, opal_reader
-from synaptictrack.analysis import scanner_analysis #diagnostics
-#from synaptictrack.correctbeamn import orbit_correction
-#from synaptictrack.ml import models, inference
-from synaptictrack.visualizatbeamns import plot_phasespace, plot_scanner
+from synapticTrack.beam import track_reader #, opal_reader
+from synapticTrack.analysis import scanner_analysis #diagnostics
+#from synapticTrack.correctbeamn import orbit_correction
+#from synapticTrack.ml import models, inference
+from synapticTrack.visualizatbeamns import plot_phasespace, plot_scanner
 
 def run_all(input_file, model_file=None, output_dir="results/"):
     """
-    Main synaptictrack pipeline:
+    Main synapticTrack pipeline:
     1. Load beam data
     2. Analyze beam properties
     3. (Optbeamnally) run machine learning model

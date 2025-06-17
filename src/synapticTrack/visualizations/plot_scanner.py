@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
 
-from synaptictrack.utils import gaussian
-from synaptictrack.visualizations.plot_phasespace import phasespace_plot
+from synapticTrack.utils import gaussian
+from synapticTrack.visualizations.plot_phasespace import phasespace_plot
 
 def wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y, filename):
     """

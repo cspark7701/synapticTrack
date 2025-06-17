@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="synaptictrack",
+    name="synapticTrack",
     version="0.1.0",
     description="Heavy Ion Linac Orbit Correction & Beam Dynamics Framework with ML",
     author="Chong Shik Park",
     author_email="kuphy@korea.ac.kr",
-    url="https://github.com/your-org/synaptictrack",
+    url="https://github.com/your-org/synapticTrack",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     python_requires=">=3.8",
@@ -23,7 +23,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "synaptictrack = synaptictrack.cli:app"
+            "synapticTrack = synapticTrack.cli:app"
         ],
     },
     classifiers=[

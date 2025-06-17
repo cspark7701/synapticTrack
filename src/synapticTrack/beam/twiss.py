@@ -1,5 +1,5 @@
 import numpy as np
-from synaptictrack.utils.stats import (
+from synapticTrack.utils.stats import (
     calc_variance, calc_covariance
 )
 
@@ -22,7 +22,7 @@ class Twiss:
             dict: {emittance, alpha, beta, gamma}
 
         """
-        #from synaptictrack.utils.stats import calc_variance, calc_covariance
+        #from synapticTrack.utils.stats import calc_variance, calc_covariance
 
         sigma_u = calc_variance(u)
         sigma_up = calc_variance(up)
