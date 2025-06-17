@@ -1,3 +1,3 @@
 def test_import_io():
-    from synaptictrack import beam
+    from synapticTrack import beam
     assert beam is not None

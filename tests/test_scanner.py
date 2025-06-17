@@ -1,8 +1,8 @@
 # tests/test_scanner.py
 import numpy as np
 import pandas as pd
-from synaptictrack.beam.beam_scanner import BeamWS, BeamAS2D
-from synaptictrack.analysis.scanner_analsys import analyze_wire_scanner, analyze_alison_scanner_2d
+from synapticTrack.beam.beam_scanner import BeamWS, BeamAS2D
+from synapticTrack.analysis.scanner_analsys import analyze_wire_scanner, analyze_alison_scanner_2d
 
 def test_analyze_wire_scanner():
     # Simulated data
