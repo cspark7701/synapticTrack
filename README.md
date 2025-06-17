@@ -19,7 +19,7 @@ The framework is currently under active development to support **orbit correctio
 
 
 ### Repository Structure (under construction)
-synapticTrack
+synapticTrack \n
 ├── docs
 │   ├── conf.py
 │   ├── index.rst
