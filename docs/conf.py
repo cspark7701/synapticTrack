@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../src'))
 
-project = 'synaptictrack'
+project = 'synapticTrack'
 copyright = '2025, Chong Shik Park'
 author = 'Chong Shik Park'
 release = '0.1.0'

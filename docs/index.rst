@@ -1,6 +1,6 @@
-.. synaptictrack documentation master file
+.. synapticTrack documentation master file
 
-Welcome to synaptictrack's documentation!
+Welcome to synapticTrack's documentation!
 =========================================
 
 .. toctree::
@@ -10,7 +10,7 @@ Welcome to synaptictrack's documentation!
 API Reference
 -------------
 
-.. automodule:: synaptictrack
+.. automodule:: synapticTrack
    :members:
    :undoc-members:
    :show-inheritance:

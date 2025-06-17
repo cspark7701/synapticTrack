@@ -3,7 +3,7 @@ requires = ["setuptools>=64", "wheel", "setuptools_scm[toml]>=7"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "synaptictrack"
+name = "synapticTrack"
 version = "0.1.0"
 description = "Heavy Ion Linac Orbit Correction & Beam Dynamics Framework with ML"
 authors = [{ name = "Chong Shik Park", email = "kuphy@korea.ac.kr" }]
@@ -24,17 +24,17 @@ dependencies = [
 ]
 
 #[project.urls]
-#Homepage = "https://github.com/your-org/synaptictrack"
-#Documentation = "https://github.com/your-org/synaptictrack/docs"
-#Source = "https://github.com/your-org/synaptictrack"
+#Homepage = "https://github.com/your-org/synapticTrack"
+#Documentation = "https://github.com/your-org/synapticTrack/docs"
+#Source = "https://github.com/your-org/synapticTrack"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["synaptictrack*"]
+include = ["synapticTrack*"]
 
 [project.scripts]
-synaptictrack = "synaptictrack.cli:app"
+synapticTrack = "synapticTrack.cli:app"
 

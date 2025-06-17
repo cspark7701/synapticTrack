@@ -1,4 +1,4 @@
-name: synaptictrack CI
+name: synapticTrack CI
 
 on:
   push:
