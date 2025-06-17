@@ -1,5 +1,7 @@
 from setuptools import setup, find_packages
 
+PACKAGE_NAME = "synapticTrack"
+
 setup(
     name="synapticTrack",
     version="0.1.0",
