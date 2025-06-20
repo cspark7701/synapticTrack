@@ -32,7 +32,7 @@ def get_ion_species_name(mass_number, charge_state):
     return f"{symbol}{charge_state}+"
 
 class Beam:
-    def __init__(self, state, mass_number, charge_state, beam_current):
+    def __init__(self, state: pd.DataFrame, mass_number: int, charge_state: int, beam_current: float):
         """
         Initializes a Beam object.
 
@@ -112,3 +112,32 @@ class Beam:
     def beam_current(self):
         """Gets the beam current."""
         return self._beam_current
+
+    @property
+    def centroid(self):
+        """
+        Computes the beam centroid (mean of x, xp, y, yp, dt, dW).
+
+        Returns:
+            pd.Series: Centroid values with keys ['x', 'xp', 'y', 'yp', 'dt', 'dW']
+        """
+        expected_columns = ['x', 'xp', 'y', 'yp', 'dt', 'dW']
+        missing = [col for col in expected_columns if col not in self._state.columns]
+        if missing:
+            raise ValueError(f"Missing expected columns in beam state: {missing}")
+        return self._state[expected_columns].mean()
+
+    @property
+    def rms_size(self):
+        """
+        Computes the RMS (standard deviation) of the beam distribution.
+
+        Returns:
+            pd.Series: RMS size for ['x', 'xp', 'y', 'yp', 'dt', 'dW']
+        """
+        expected_columns = ['x', 'xp', 'y', 'yp', 'dt', 'dW']
+        missing = [col for col in expected_columns if col not in self._state.columns]
+        if missing:
+            raise ValueError(f"Missing expected columns in beam state: {missing}")
+        return self._state[expected_columns].std()
+

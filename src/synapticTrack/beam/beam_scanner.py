@@ -107,8 +107,6 @@ class BeamAS:
         """Optional: Y plane current, if measured."""
         return self._data['y_current'] if 'y_current' in self._data.columns else None
 
-
-
     @property
     def scan_id(self):
         return self._scan_id
