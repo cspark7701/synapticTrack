@@ -21,7 +21,8 @@ setup(
         "h5py>=3.0",
         "pymongo>=4.0",
         "typer[all]>=0.9",
-        "scikit-learn>=1.0"
+        "scikit-learn>=1.0",
+        "periodictable>2.0"
     ],
     entry_points={
         "console_scripts": [

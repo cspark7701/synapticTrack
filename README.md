@@ -11,7 +11,7 @@ The framework is currently under active development to support **orbit correctio
 - ML-based orbit correction using simulation and diagnostic data
 - Interoperability with multiple beam dynamics codes:
   - [TRACK (Fortran)](https://www.phy.anl.gov/atlas/TRACK/)
-  - [JuTrack (Julia)](https://github.com/cheolgyu/JuTrack.jl)
+  - [JuTrack (Julia)](https://github.com/MSU-Beam-Dynamics/JuTrack.jl)
 - Support for:
   - Multi-ion species (different A/Q)
   - Variable charge states and currents
@@ -19,7 +19,8 @@ The framework is currently under active development to support **orbit correctio
 
 
 ### Repository Structure (under construction)
-synapticTrack \n
+'''
+synapticTrack
 ├── docs
 │   ├── conf.py
 │   ├── index.rst
@@ -82,7 +83,7 @@ synapticTrack \n
     ├── __init__.py
     ├── test_beam.py
     └── test_scanner.py
-
+'''
 
 ### Author
 
