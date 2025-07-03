@@ -22,7 +22,8 @@ setup(
         "pymongo>=4.0",
         "typer[all]>=0.9",
         "scikit-learn>=1.0",
-        "periodictable>2.0"
+        "periodictable>2.0",
+        "nbstripout>0.8.1"
     ],
     entry_points={
         "console_scripts": [
