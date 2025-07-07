@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # pyenv environment
-export PATH="$HOME/.pyenv/bin:$HOME/Work/simulation_codes-working/julia/bin/:$PATH"
+export PATH="$HOME/.pyenv/bin:$HOME/Work/simulation_codes-working/julia/usr/bin/:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
