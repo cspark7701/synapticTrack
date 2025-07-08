@@ -20,9 +20,9 @@ def test_analyze_wire_scanner():
     })
     beam = BeamWS(df, scan_id="test_ws")
     results = analyze_wire_scanner(beam, plot=False)
-    assert "sigma_x_mm" in results
-    assert "sigma_y_mm" in results
-    assert results["sigma_x_mm"] > 0
+    assert "sigma_x" in results
+    assert "sigma_y" in results
+    assert results["sigma_x"] > 0
 
 
 def test_analyze_allison_scanner_2d():
@@ -36,6 +36,6 @@ def test_analyze_allison_scanner_2d():
     })
     beam = BeamAS(df, scan_id="test_as2d")
     results = analyze_allison_scanner_2d(beam, plot=False)
-    assert "geometric_emittance_mm_mrad" in results
-    assert results["geometric_emittance_mm_mrad"] > 0
+    assert "geometric_emittance" in results
+    assert results["geometric_emittance"] > 0
 
