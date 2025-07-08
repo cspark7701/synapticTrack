@@ -25,7 +25,7 @@ def test_analyze_wire_scanner():
     assert results["sigma_x_mm"] > 0
 
 
-def test_analyze_alison_scanner_2d():
+def test_analyze_allison_scanner_2d():
     x = np.random.normal(0, 1, 1000)
     xp = np.random.normal(0, 0.5, 1000)
     x_current = np.exp(-(x**2 + xp**2))
@@ -35,7 +35,7 @@ def test_analyze_alison_scanner_2d():
         'x_current': x_current,
     })
     beam = BeamAS(df, scan_id="test_as2d")
-    results = analyze_alison_scanner_2d(beam, plot=False)
+    results = analyze_allison_scanner_2d(beam, plot=False)
     assert "geometric_emittance_mm_mrad" in results
     assert results["geometric_emittance_mm_mrad"] > 0
 
