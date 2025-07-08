@@ -1,7 +1,7 @@
 import typer
 import pandas as pd
 from synapticTrack import pipeline
-from synapticTrack.beam.beam_scanner import BeamWS, BeamAS2D
+from synapticTrack.beam.beam_scanner import BeamWS, BeamAS
 from synapticTrack.analysis.scanner_analysis import analyze_wire_scanner, analyze_allison_scanner_2d
 
 app = typer.Typer()
@@ -26,7 +26,7 @@ def analyze(scanner: str, file: str, bins: int = 150, plot: bool = True):
         df = pd.read_csv(file, skiprows=1, sep='\\s+',
                          names=['x', 'xp', 'current', 'hv', 'y_current'])
         df = df[['x', 'xp', 'current']]
-        scan = BeamAS2D(df, scan_id=file)
+        scan = BeamAS(df, scan_id=file)
         results = analyze_allison_scanner_2d(scan, bins=bins, plot=plot)
     else:
         typer.echo("Invalid scanner type. Choose 'wire' or 'allison'.")
