@@ -1,7 +1,7 @@
 # tests/test_scanner.py
 import numpy as np
 import pandas as pd
-from synapticTrack.beam.beam_scanner import BeamWS, BeamAS2D
+from synapticTrack.beam.beam_scanner import BeamWS, BeamAS
 from synapticTrack.analysis.scanner_analsys import analyze_wire_scanner, analyze_alison_scanner_2d
 
 def test_analyze_wire_scanner():
@@ -34,7 +34,7 @@ def test_analyze_alison_scanner_2d():
         'xp': xp,
         'current': current,
     })
-    beam = BeamAS2D(df, scan_id="test_as2d")
+    beam = BeamAS(df, scan_id="test_as2d")
     results = analyze_alison_scanner_2d(beam, plot=False)
     assert "geometric_emittance_mm_mrad" in results
     assert results["geometric_emittance_mm_mrad"] > 0
