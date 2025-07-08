@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 from synapticTrack.beam.beam_scanner import BeamWS, BeamAS
-from synapticTrack.analysis.scanner_analysis import analyze_wire_scanner, analyze_alison_scanner_2d
+from synapticTrack.analysis.scanner_analysis import analyze_wire_scanner, analyze_allison_scanner_2d
 
 def test_analyze_wire_scanner():
     # Simulated data
