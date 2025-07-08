@@ -72,7 +72,7 @@ def analyze_allison_scanner_2d(beamas, plot=True, bins=150, density=True, projec
     Plots phase space distribution (x vs xp).
     
     Args:
-        beamas (BeamAS): object with x, xp, current arrays
+        beamas (BeamAS): object with x, xp, x_current arrays
         plot (bool): whether to show phase space plot
         bins (int): number of bins for histogram
         density (bool): if True, plot density map, else scatter plot
@@ -82,27 +82,27 @@ def analyze_allison_scanner_2d(beamas, plot=True, bins=150, density=True, projec
     """
     x = beamas.x
     xp = beamas.xp
-    current = np.abs(beamas.x_current)  # take absolute current
+    x_current = np.abs(beamas.x_current)  # take absolute current
 
     # Compute beam center and RMS
-    x_center, sigma_x = _weighted_rms_and_center(x, current)
-    xp_center, sigma_xp = _weighted_rms_and_center(xp, current)
+    x_center, sigma_x = _weighted_rms_and_center(x, x_current)
+    xp_center, sigma_xp = _weighted_rms_and_center(xp, x_current)
 
     # Estimate emittance (geometric)
     emittance = sigma_x * sigma_xp  # [mm·mrad]
 
     # Gaussian fit
-    popt_x, _ = curve_fit(gaussian, x, np.abs(current),
-                          p0=[np.max(np.abs(current)), x_center, sigma_x, 0])
-    popt_xp, _ = curve_fit(gaussian, xp, np.abs(current),
-                          p0=[np.max(np.abs(current)), xp_center, sigma_xp, 0])
+    popt_x, _ = curve_fit(gaussian, x, np.abs(x_current),
+                          p0=[np.max(np.abs(x_current)), x_center, sigma_x, 0])
+    popt_xp, _ = curve_fit(gaussian, xp, np.abs(x_current),
+                          p0=[np.max(np.abs(x_current)), xp_center, sigma_xp, 0])
 
     sigma_x_fit = np.abs(popt_x[2])
     sigma_xp_fit = np.abs(popt_xp[2])
 
 
     if plot:
-        allison_scanner_plot(x, xp, x_center, xp_center, current, density, bins, projection, filename)
+        allison_scanner_plot(x, xp, x_center, xp_center, x_current, density, bins, projection, filename)
 
     return {
         "x_center": x_center,

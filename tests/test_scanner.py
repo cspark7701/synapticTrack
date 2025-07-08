@@ -28,11 +28,11 @@ def test_analyze_wire_scanner():
 def test_analyze_alison_scanner_2d():
     x = np.random.normal(0, 1, 1000)
     xp = np.random.normal(0, 0.5, 1000)
-    current = np.exp(-(x**2 + xp**2))
+    x_current = np.exp(-(x**2 + xp**2))
     df = pd.DataFrame({
         'x': x,
         'xp': xp,
-        'current': current,
+        'x_current': x_current,
     })
     beam = BeamAS(df, scan_id="test_as2d")
     results = analyze_alison_scanner_2d(beam, plot=False)

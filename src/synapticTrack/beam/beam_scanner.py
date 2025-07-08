@@ -7,7 +7,7 @@ class BeamWS:
 
         Args:
             data (pd.DataFrame): DataFrame with wire scanner data.
-                                 Required columns: ['x_pos', 'x_current', 'y_pos', 'y_current', 'd_pos', 'd_current']
+                                 Required columns: ['x_pos', 'x_current', 'y_pos', 'y_current']
             scan_id (str, optional): Identifier for this scan (e.g. filename, run ID, wire scanner label).
         """
         if not isinstance(data, pd.DataFrame):
@@ -43,6 +43,16 @@ class BeamWS:
         return self._data['y_current']
 
     @property
+    def d_pos(self):
+        """Optional"""
+        return self._data['d_pos'] if 'd_pos' in self._data.columns else None
+
+    @property
+    def d_current(self):
+        """Optional"""
+        return self._data['d_current'] if 'd_current' in self._data.columns else None
+
+    @property
     def scan_id(self):
         return self._scan_id
 
@@ -66,14 +76,14 @@ class BeamAS:
 
         Args:
             data (pd.DataFrame): DataFrame with Allison scanner data.
-                                 Required columns: ['x', 'xp', 'current']
+                                 Required columns: ['x', 'xp', 'x_current']
             scan_id (str, optional): Identifier for this scan (e.g. filename, run ID).
         """
         if not isinstance(data, pd.DataFrame):
             raise TypeError("data must be a pandas DataFrame")
         if data.empty:
             raise ValueError("data DataFrame cannot be empty")
-        required_columns = ['x', 'xp', 'x_current', 'hv', 'y_current']
+        required_columns = ['x', 'xp', 'x_current'] #, 'hv', 'y_current']
         if not set(required_columns).issubset(data.columns):
             raise ValueError(f"data must contain columns: {required_columns}")
 
