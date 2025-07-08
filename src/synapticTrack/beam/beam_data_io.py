@@ -6,7 +6,7 @@ from synapticTrack.beam import Beam, BeamWS, BeamAS
 
 def read_track(filename: str, mass_number: int, charge_state: int, beam_current: float) -> Beam:
     columns = ["Nseed", "iq", "dt", "dW", "x", "xp", "y", "yp"]
-    df_particles = pd.read_csv(filename, sep='\s+', skiprows=1, names=columns, engine='python')
+    df_particles = pd.read_csv(filename, sep=r'\s+', skiprows=1, names=columns, engine='python')
 
     df_particles['x'] *= 10     # [cm] to [mm]
     df_particles['y'] *= 10     # [cm] to [mm]
@@ -36,7 +36,7 @@ def read_sqlite(filename: str) -> Beam:
 
 def read_wire_scanner(filename: str) -> BeamWS:
     columns = ["x_pos", "x_current", "y_pos", "y_current", "d_pos", "d_current"]
-    df_particles = pd.read_csv(filename, sep='\s+', skiprows=1, names=columns, engine='python')
+    df_particles = pd.read_csv(filename, sep=r'\s+', skiprows=1, names=columns, engine='python')
 
     scan_id = splitext(basename(filename))[0]
 
@@ -46,7 +46,7 @@ def read_wire_scanner(filename: str) -> BeamWS:
 
 def read_allison_scanner(filename: str) -> BeamAS:
     columns = ["x", "xp", "x_current", "hv", "y_current"]
-    df_particles = pd.read_csv(filename, sep='\s+', skiprows=1, names=columns, engine='python')
+    df_particles = pd.read_csv(filename, sep=r'\s+', skiprows=1, names=columns, engine='python')
     
     scan_id = splitext(basename(filename))[0]
 
