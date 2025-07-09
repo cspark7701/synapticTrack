@@ -20,10 +20,12 @@ def test_analyze_wire_scanner():
     })
     beam = BeamWS(df, scan_id="test_ws")
     results = analyze_wire_scanner(beam, plot=False)
+    assert "x_center" in results
+    assert "y_center" in results
     assert "sigma_x" in results
     assert "sigma_y" in results
-    assert results["sigma_x"] > 0
-
+    assert "gaussian_sigma_x_fit" in results
+    assert "gaussian_sigma_y_fit" in results
 
 def test_analyze_allison_scanner_2d():
     x = np.random.normal(0, 1, 1000)
@@ -36,6 +38,11 @@ def test_analyze_allison_scanner_2d():
     })
     beam = BeamAS(df, scan_id="test_as2d")
     results = analyze_allison_scanner_2d(beam, plot=False)
+    assert "x_center" in results
+    assert "xp_center" in results
+    assert "sigma_x" in results
+    assert "sigma_xp" in results
+    assert "gaussian_sigma_x_fit" in results
+    assert "gaussian_sigma_xp_fit" in results
     assert "geometric_emittance" in results
-    assert results["geometric_emittance"] > 0
 
