@@ -93,7 +93,7 @@ def analyze_allison_scanner_2d(beamas, plot=True, bins=150, density=True, projec
     xp_centered = xp - xp_center
     covariance_x_xp = np.sum(x_current * x_centered * xp_centered) / np.sum(x_current)
 
-    emittance_rms = np.sqrt(sigma_x**2 * sigma_xp**2 - covaraince_x_xp**2)
+    emittance_rms = np.sqrt(sigma_x**2 * sigma_xp**2 - covariance_x_xp**2)
 
     # Estimate emittance (geometric)
     emittance_geometric = sigma_x * sigma_xp  # [mm·mrad]
@@ -118,7 +118,7 @@ def analyze_allison_scanner_2d(beamas, plot=True, bins=150, density=True, projec
         "sigma_xp": sigma_xp,
         "gaussian_sigma_x_fit": sigma_x_fit,
         "gaussian_sigma_xp_fit": sigma_xp_fit,
-        "covaraince_x_xp": covariance_x_xp,
+        "covariance_x_xp": covariance_x_xp,
         "emittance_rms": emittance_rms,
         "emittance_geometric": emittance_geometric
     }
