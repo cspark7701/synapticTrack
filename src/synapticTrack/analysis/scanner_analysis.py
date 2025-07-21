@@ -39,8 +39,8 @@ def analyze_wire_scanner(beamws, plot=True, filename=None) -> dict:
     y, iy = y[unique_y], iy[unique_y]
 
     # Compute RMS beam sizes
-    x_center, sigma_x = _weighted_rms_and_center(x, ix)
-    y_center, sigma_y = _weighted_rms_and_center(y, iy)
+    x_center, sigma_x = _weighted_rms_and_center(x, np.abs(ix))
+    y_center, sigma_y = _weighted_rms_and_center(y, np.abs(iy))
 
     # Gaussian fit
     popt_x, _ = curve_fit(gaussian, x, np.abs(ix), 
@@ -88,8 +88,15 @@ def analyze_allison_scanner_2d(beamas, plot=True, bins=150, density=True, projec
     x_center, sigma_x = _weighted_rms_and_center(x, x_current)
     xp_center, sigma_xp = _weighted_rms_and_center(xp, x_current)
 
+    # Compute weighted covariance between x and xp
+    x_centered = x - x_center
+    xp_centered = xp - xp_center
+    covariance_x_xp = np.sum(x_current * x_centered * xp_centered) / np.sum(x_current)
+
+    emittance_rms = np.sqrt(sigma_x**2 * sigma_xp**2 - cov_x_xp**2)
+
     # Estimate emittance (geometric)
-    emittance = sigma_x * sigma_xp  # [mm·mrad]
+    emittance_geometric = sigma_x * sigma_xp  # [mm·mrad]
 
     # Gaussian fit
     popt_x, _ = curve_fit(gaussian, x, np.abs(x_current),
@@ -111,6 +118,8 @@ def analyze_allison_scanner_2d(beamas, plot=True, bins=150, density=True, projec
         "sigma_xp": sigma_xp,
         "gaussian_sigma_x_fit": sigma_x_fit,
         "gaussian_sigma_xp_fit": sigma_xp_fit,
-        "geometric_emittance": emittance
+        "cov_x_xp": cov_x_xp,
+        "emittance_rms": emittance_rms,
+        "emittance_geometric": emittance_geometric
     }
 
