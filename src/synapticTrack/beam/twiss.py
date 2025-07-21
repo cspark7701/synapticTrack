@@ -92,13 +92,13 @@ class Twiss:
         beta_rel = pc / energy
 
         if plane == 'x':
-            geo_emit = self._twiss_x['emittance']
+            unnorm_emit = self._twiss_x['emittance']
         elif plane == 'y':
-            geo_emit = self._twiss_y['emittance']
+            unnorm_emit = self._twiss_y['emittance']
         elif plane == 'z':
-            geo_emit = self._twiss_z['emittance']
+            unnorm_emit = self._twiss_z['emittance']
         else:
             raise ValueError("plane must be 'x', 'y', or 'z'")
 
-        return gamma_rel * beta_rel * geo_emit
+        return gamma_rel * beta_rel * unnorm_emit
 
