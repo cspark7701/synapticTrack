@@ -32,7 +32,7 @@ def get_ion_species_name(mass_number, charge_state):
     return f"{symbol}{charge_state}+"
 
 class Beam:
-    def __init__(self, state: pd.DataFrame, mass_number: int, charge_state: int, beam_current: float):
+    def __init__(self, state: pd.DataFrame, mass_number: int, charge_state: int, beam_current: float, reference_energy: float):
         """
         Initializes a Beam object.
 
@@ -40,7 +40,8 @@ class Beam:
             state (pd.DataFrame): DataFrame representing the beam state.
             mass_number (int): Mass number of the ion species.
             charge_state (int): Charge state of the ion.
-            beam_current (float): Beam current.
+            beam_current (float): Beam current in uA.
+            reference_energy (float): Reference beam energy in MeV/u.
         """
         if not isinstance(state, pd.DataFrame):
             raise TypeError("state must be a pandas DataFrame")
@@ -52,6 +53,7 @@ class Beam:
         self._charge_state = charge_state
         self._beam_current = beam_current
         self._species = get_ion_species_name(mass_number, charge_state)
+        self._reference_energy = reference_energy
 
     @property
     def state(self):
@@ -112,6 +114,11 @@ class Beam:
     def beam_current(self):
         """Gets the beam current."""
         return self._beam_current
+
+    @property
+    def reference_energy(self):
+        """Gets the beam reference energy in MeV/u"""
+        return self._reference_energy
 
     @property
     def centroid(self):

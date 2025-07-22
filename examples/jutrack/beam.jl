@@ -2,7 +2,7 @@ using DelimitedFiles
 using JuTrack
 
 # Load r matrix from file
-particles = readdlm("r_matrix.dat")
+particles = readdlm("jubeam.dat")
 
 charge_number = 8.0
 mass_number = 40.0
