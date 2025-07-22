@@ -44,5 +44,7 @@ def test_analyze_allison_scanner_2d():
     assert "sigma_xp" in results
     assert "gaussian_sigma_x_fit" in results
     assert "gaussian_sigma_xp_fit" in results
-    assert "geometric_emittance" in results
+    assert "covariance_x_xp" in results
+    assert "emittance_rms" in results
+    assert "emittance_geometric" in results
 
