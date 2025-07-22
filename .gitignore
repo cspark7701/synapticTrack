@@ -32,7 +32,9 @@ Thumbs.db
 
 # swap files
 .*.swp
-examples/.ipynb_checkpoints/
+
+# jupyter checkpoint
+.ipynb_checkpoints
 *checkpoint.ipynb
 
 tmp/
