@@ -2,6 +2,7 @@ import pandas as pd
 from h5py import h5
 import sqlite3 as sql3
 from os.path import *
+from typing import Union
 
 from synapticTrack.beam import Beam, BeamWS, BeamAS
 import numpy as np
@@ -18,10 +19,9 @@ def read_track(filename: str, mass_number: int, charge_state: int, beam_current:
     
     return Beam(df_particles, mass_number, charge_state, beam_current, reference_energy)
 
-# TODO
 def read_jutrack(filename: str, mass_number: int, charge_state: int, beam_current: float, reference_energy: float) -> Beam:
-    df_particles = np.zeros([6])
-    return Beam(df_particles, mass_number, charge_state, beam_current, reference_energy)
+    particles_array = np.loadtxt(filename)
+    return convert_jutrack(df_particles_array, mass_number, charge_state, beam_current, reference_energy)
 
 # TODO
 def read_opal(filename: str, mass_number: int, charge_state: int, beam_current: float, reference_energy: float) -> Beam:
@@ -85,12 +85,12 @@ def convert_jutrack(particle_array: np.ndarray, mass_number: int, charge_state: 
     E0 = mass_number * amu  # MeV
     gamma0 = 1 + reference_energy / amu
     beta0 = np.sqrt(1 - 1 / gamma0**2)
-    p0 = gamma0 * beta0 * E0  # MeV/c
+    p0 = gamma0 * beta0 * E0  # MeV/u/c
 
     # Calculate total p from delta
     p = p0 * (1 + delta)
     gamma = np.sqrt(1 + (p / E0)**2)
-    dW = (gamma - gamma0) * amu  # MeV/u
+    dW = (gamma - gamma0) * E0 / mass_number # MeV/u
 
     # Estimate pz/p0
     pz_p0 = np.sqrt((1 + delta)**2 - px_p0**2 - py_p0**2)
@@ -271,7 +271,7 @@ class BeamDataIO:
         beam = reader(filename, mass_number, charge_state, beam_current, reference_energy)
         return beam
 
-    def read_scanner(self, scanner: str, filename: str) -> BeamWS:
+    def read_scanner(self, scanner: str, filename: str) -> Union[BeamWS, BeamAS]:
         """
         Reads beam scanner data from a file.
 
