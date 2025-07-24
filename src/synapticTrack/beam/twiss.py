@@ -2,6 +2,9 @@ import numpy as np
 from synapticTrack.utils.stats import (
     calc_variance, calc_covariance
 )
+from scipy.constants import c, physical_constants
+
+amu = physical_constants['atomic mass constant energy equivalent in MeV'][0]
 
 class Twiss:
     def __init__(self, beam):
@@ -72,7 +75,6 @@ class Twiss:
             "twiss_z": self._twiss_z
         }
 
-    #TODO: FIX BEAM ENERGY
     def normalized_emittance(self, plane='x'):
         """
         Compute normalized emittance: ε_n = γ_rel * β_rel * ε
@@ -82,14 +84,8 @@ class Twiss:
         Returns:
             float: normalized emittance [mm·mrad]
         """
-        charge = self._beam.charge_state
-        mass_u = self._beam.mass_number  # mass in amu
-        mass_MeV = mass_u * 931.494  # [MeV/c^2]
-
-        pc = self._beam.state['pz'].mean()  # [MeV/c]
-        energy = np.sqrt(pc**2 + mass_MeV**2)  # total energy [MeV]
-        gamma_rel = energy / mass_MeV
-        beta_rel = pc / energy
+        gamma = 1 + self._beam.reference_energy / amu
+        beta = np.sqrt(1 - 1 / gamma**2)
 
         if plane == 'x':
             unnorm_emit = self._twiss_x['emittance']
@@ -100,5 +96,9 @@ class Twiss:
         else:
             raise ValueError("plane must be 'x', 'y', or 'z'")
 
-        return gamma_rel * beta_rel * unnorm_emit
+        return (beta * gamma * unnorm_emit)
+
+    def normalized_emittances(self):
+        return {k: self.normalized_emittance(k) for k in ['x', 'y', 'z']}
+
 
