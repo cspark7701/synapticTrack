@@ -7,9 +7,12 @@ from pathlib import Path
 from synapticTrack.io import BeamDataIOManager
 from synapticTrack.visualizations.plot_phasespace import phasespace_plot
 
+TEST_DIR = Path(__file__).parent
+DATA_DIR = TEST_DIR / "data" / "input_beam"
+
 @pytest.fixture
 def example_beam():
-    filename = Path("tests/data/input_beam/coord.out")
+    filename = DATA_DIR / "coord.out"
     assert filename.exists(), f"Missing test beam file: {filename}"
     return BeamDataIOManager.read(
         code='track',

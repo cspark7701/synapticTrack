@@ -4,10 +4,13 @@ from synapticTrack.beam import Twiss
 from synapticTrack.io import BeamDataIOManager
 from pathlib import Path
 
+TEST_DIR = Path(__file__).parent
+DATA_DIR = TEST_DIR / "data" / "input_beam"
+
 @pytest.fixture
 def example_beam():
     """Fixture for loading example beam using BeamDataIOManager from TRACK file."""
-    filename = Path("tests/data/input_beam/coord.out")
+    filename = DATA_DIR / "coord.out"
     assert filename.exists(), f"Test input file not found: {filename}"
     return BeamDataIOManager.read(
         code='track',
