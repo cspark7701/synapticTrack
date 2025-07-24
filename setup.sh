@@ -14,3 +14,5 @@ then
 else
     export LD_LIBRARY_PATH=$HOME/.pyenv/versions/3.13.5/lib
 fi
+
+export JuTrack_Path="/home/cspark/Work/simulation_codes-working/JuTrack.jl"
