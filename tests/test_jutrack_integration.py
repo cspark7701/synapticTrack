@@ -69,6 +69,6 @@ def test_jutrack_beam(activate_jutrack, track_beam, tmp_path):
     assert not jutrack_beam.state.empty
     assert 'x' in jutrack_beam.state.columns
     assert 'xp' in jutrack_beam.state.columns
-    assert jutrack_beam.state.shape == track_beam.state.shape - 2
+    assert jutrack_beam.state.shape == track_beam.state.shape
 
 

@@ -15,6 +15,8 @@ class TrackIO:
         df = pd.read_csv(filename, sep=r'\s+', skiprows=1, names=columns, engine='python')
         df['x'] *= 10  # cm to mm
         df['y'] *= 10
+        df.drop('Nseed', axis=1, inplace=True)
+        df.drop('iq', axis=1, inplace=True)
         return Beam(df, mass_number, charge_state, beam_current, reference_energy)
 
     @staticmethod
