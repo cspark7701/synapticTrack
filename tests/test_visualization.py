@@ -9,7 +9,7 @@ from synapticTrack.visualizations.plot_phasespace import phasespace_plot
 
 @pytest.fixture
 def example_beam():
-    filename = Path("data/input_beam/coord.out")
+    filename = Path("tests/data/input_beam/coord.out")
     assert filename.exists(), f"Missing test beam file: {filename}"
     return BeamDataIOManager.read(
         code='track',

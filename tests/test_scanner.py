@@ -7,7 +7,7 @@ from synapticTrack.analysis import analyze_wire_scanner, analyze_allison_scanner
 
 @pytest.fixture
 def wire_scanner_dir():
-    return os.path.join("data", "scanner", "2_exp_LEBT_WS")
+    return os.path.join("tests", "data", "scanner", "2_exp_LEBT_WS")
 
 @pytest.mark.parametrize("wire_scanner_filename", [
     "ECR32-WS001-100717.txt",
@@ -33,7 +33,7 @@ def test_wire_scanner_analysis(wire_scanner_dir, wire_scanner_filename):
 
 @pytest.fixture
 def allison_scanner_dir():
-    return os.path.join("data", "scanner", "3_exp_Allison")
+    return os.path.join("tests", "data", "scanner", "3_exp_Allison")
 
 @pytest.mark.parametrize("allison_scanner_filename", [
     "101614_X.txt",

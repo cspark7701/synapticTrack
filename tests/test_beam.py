@@ -7,7 +7,7 @@ from pathlib import Path
 @pytest.fixture
 def example_beam():
     """Fixture for loading example beam using BeamDataIOManager from TRACK file."""
-    filename = Path("data/input_beam/coord.out")
+    filename = Path("tests/data/input_beam/coord.out")
     assert filename.exists(), f"Test input file not found: {filename}"
     return BeamDataIOManager.read(
         code='track',
