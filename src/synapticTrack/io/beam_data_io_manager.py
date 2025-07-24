@@ -1,10 +1,12 @@
 import pandas as pd
 import numpy as np
+from os.path import splitext, exists
+import json
 from typing import Union
 from scipy.constants import c, physical_constants
 
-from synapticTrack.beam import Beam, BeamWS, BeamAS
-from synapticTrack.io import TrackIO, JuTrackIO, OPALIO, FlameIO, ScannerIO
+from synapticTrack.beam import *
+from synapticTrack.io import *
 
 amu = physical_constants['atomic mass constant energy equivalent in MeV'][0]
 
@@ -30,28 +32,84 @@ class BeamDataIOManager:
     _scanners = list(scanner_readers.keys())
 
     @classmethod
-    def read(cls, code: str, filename: str, mass_number: int, charge_state: int, 
-             beam_current: float, reference_energy: float) -> Beam:
+    def read(cls, code: str, filename: str,
+             mass_number: int = None, charge_state: int = None,
+             beam_current: float = None, reference_energy: float = None) -> Beam:
         """
-        Reads beam data from a file.
+        Reads beam data from a file. If a metadata .json file exists,
+        it overrides the passed parameters.
 
         Args:
-            code (str): The simulation code ('track', 'jutrack', 'opal', 'flame').
-            filename (str): The name of the file to read.
-            mass_number (int): Mass number of the ion species.
-            charge_state (int): Charge state of the ion.
-            beam_current (float): Beam current.
-            reference_enegy (float): Beam reference energy in MeV/u.
+            code (str): Simulation code ('track', 'jutrack', 'opal', 'flame')
+            filename (str): Path to the beam particle file
+            mass_number (int, optional): Mass number of the ion
+            charge_state (int, optional): Charge state
+            beam_current (float, optional): Beam current
+            reference_energy (float, optional): Reference energy in MeV/u
 
         Returns:
-            Beam: A Beam object containing the loaded data.
+            Beam: A Beam object with data and metadata
         """
-        return cls.code_readers[code](filename, mass_number, charge_state, 
-                                      beam_current, reference_energy)
+        json_path = splitext(filename)[0] + ".json"
+        if exists(json_path):
+            metadata = cls.read_metadata(filename)
+            mass_number = metadata["mass_number"]
+            charge_state = metadata["charge_state"]
+            beam_current = metadata["beam_current"]
+            reference_energy = metadata["reference_energy"]
+
+        if None in (mass_number, charge_state, beam_current, reference_energy):
+            raise ValueError("Missing beam parameters and no metadata file found.")
+
+        return cls.code_readers[code](filename, mass_number, charge_state, beam_current, reference_energy)
 
     @classmethod
     def write(cls, code: str, filename: str, beam: Beam):
-        return cls.code_writers[code](filename, beam)
+        # 1. Save beam particle coordinates
+        cls.code_writers[code](filename, beam)
+
+        # 2. Create metadata dictionary
+        def to_serializable(d):
+            """Convert all values to serializable (e.g., float) format."""
+            return {k: float(v) for k, v in d.items()}
+
+        twiss = Twiss(beam)
+        metadata = {
+            "species": beam.species,
+            "charge_state": beam.charge_state,
+            "mass_number": beam.mass_number,
+            "beam_current": beam.beam_current,
+            "reference_energy": beam.reference_energy,
+            "macroparticles": beam.macroparticles,
+            "beam_centroid": to_serializable(beam.centroid),
+            "beam_sigma": to_serializable(beam.rms_size),
+            "twiss_x": to_serializable(twiss.horizontal),
+            "twiss_y": to_serializable(twiss.vertical),
+            "twiss_z": to_serializable(twiss.longitudinal)
+        }
+        # 3. Determine JSON filename
+        json_filename = splitext(filename)[0] + ".json"
+
+        # 4. Write JSON metadata
+        with open(json_filename, "w") as f:
+            json.dump(metadata, f, indent=4)
+
+    @classmethod
+    def read_beam_metadata(cls, filename: str) -> dict:
+        """
+        Reads the beam metadata (charge_state, mass_number, etc.) from a corresponding .json file.
+
+        Args:
+            filename (str): Path to the code-specific particle coordinate file.
+
+        Returns:
+            dict: Dictionary with metadata keys and values.
+        """
+        json_filename = splitext(filename)[0] + ".json"
+        with open(json_filename, "r") as f:
+            metadata = json.load(f)
+        print(json.dumps(metadata, indent=4))
+        return metadata
 
     @classmethod
     def read_scanner(cls, scanner: str, filename: str) -> Union[BeamWS, BeamAS]:
