@@ -7,7 +7,7 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 pyenv activate synapticTrack
 
-# linking dynamic libpython3.14
+# linking dynamic libpython3.13
 if [ -n "${LD_LIBRARY_PATH}" ]
 then
     export LD_LIBRARY_PATH="$HOME/.pyenv/versions/3.13.5/lib:$LD_LIBRARY_PATH"

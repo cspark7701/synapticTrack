@@ -52,7 +52,7 @@ jobs:
     - name: Install and initialize PyJulia
       run: |
         python -m julia.install
-        python -c "from julia import Julia" #; Julia(compiled_modules=False)"
+        python -c "from julia import Julia"; Julia(compiled_modules=False)"
 
     - name: Run Pytest
       run: |
