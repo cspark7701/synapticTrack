@@ -24,11 +24,11 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Installi Python dependencies
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -e .[dev]
-        pip install julia
+        pip install git+https://github.com/JuliaPy/pyjulia.git
 
     - name: Set up Julia
       uses: julia-actions/setup-julia@v1
@@ -52,7 +52,7 @@ jobs:
     - name: Install and initialize PyJulia
       run: |
         python -m julia.install
-        python -c "from julia import Julia"; Julia(compiled_modules=False)"
+        python -c "from julia.api import Julia; Julia(compiled_modules=False)"
 
     - name: Run Pytest
       run: |
