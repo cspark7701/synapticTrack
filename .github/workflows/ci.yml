@@ -46,6 +46,8 @@ jobs:
           using Pkg;
           Pkg.activate("external/JuTrack.jl");
           Pkg.instantiate();
+          Pkg.add("PyCall");
+          Pkg.build("Pycall");
           Pkg.precompile();
         '
 
