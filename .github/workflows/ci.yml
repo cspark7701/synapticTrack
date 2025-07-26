@@ -42,6 +42,19 @@ jobs:
         mkdir -p external
         git clone https://github.com/MSU-Beam-Dynamics/JuTrack.jl.git external/JuTrack.jl
 
+
+    - name: Install/initialize PyJulia and Initialize Precompile JuTrack
+      run: |
+        python -m julia.install
+        julia -e '
+          using Pkg;
+          Pkg.activate("external/JuTrack.jl");
+          Pkg.add("PyCall");
+          Pkg.build("PyCall");
+          Pkg.precompile();
+        '
+        python -c "from julia.api import Julia; Julia(runtime='/usr/bin/julia', compiled_modules=False)"
+
     - name: Precompile JuTrack environment and PyCall
       run: |
         julia -e '
