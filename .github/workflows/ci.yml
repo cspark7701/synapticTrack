@@ -12,13 +12,15 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.12'] #'3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.12']
 
     env:
       JuTrack_Path: ${{ github.workspace }}/external/JuTrack.jl
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout synapticTrack repo
+      uses: actions/checkout@v4
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
@@ -35,7 +37,21 @@ jobs:
       with:
         version: '1.10'
 
-    - name: Precompile JuTrack in Julia
+    - name: Clone JuTrack.jl externally
+      run: |
+        mkdir -p external
+        git clone https://github.com/MSU-Beam-Dynamics/JuTrack.jl.git external/JuTrack.jl
+
+    - name: Install PyCall globally (for PyJulia compatibility)
+      run: |
+        julia -e '
+          using Pkg;
+          Pkg.add("PyCall");
+          Pkg.build("PyCall");
+          Pkg.precompile();
+        '
+
+    - name: Precompile JuTrack environment and PyCall
       run: |
         julia -e '
           using Pkg;
@@ -45,16 +61,6 @@ jobs:
           Pkg.build("PyCall");
           Pkg.precompile();
         '
-
-   - name: Clone JuTrack.jl externally
-      run: |
-        mkdir -p external
-        git clone https://github.com/MSU-Beam-Dynamics/JuTrack.jl.git external/JuTrack.jl
-
-
-    #- name: Initialize PyJulia without julia.install
-    #  run: |
-    #    python -c "from julia.api import Julia; jl = Julia(runtime='/usr/bin/julia', compiled_modules=False)"
 
     - name: Install and initialize PyJulia
       run: |
