@@ -42,15 +42,6 @@ jobs:
         mkdir -p external
         git clone https://github.com/MSU-Beam-Dynamics/JuTrack.jl.git external/JuTrack.jl
 
-    - name: Install PyCall globally (for PyJulia compatibility)
-      run: |
-        julia -e '
-          using Pkg;
-          Pkg.add("PyCall");
-          Pkg.build("PyCall");
-          Pkg.precompile();
-        '
-
     - name: Precompile JuTrack environment and PyCall
       run: |
         julia -e '
