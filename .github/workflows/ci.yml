@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.12']
+        python-version: ['3.13']
 
     env:
       JuTrack_Path: ${{ github.workspace }}/external/JuTrack.jl
