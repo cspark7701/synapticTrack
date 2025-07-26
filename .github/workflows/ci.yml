@@ -53,10 +53,9 @@ jobs:
           Pkg.precompile();
         '
 
-    - name: Install and initialize PyJulia
+    - name: Initialize PyJulia without julia.install
       run: |
-        python -m julia.install
-        python -c "from julia.api import Julia; Julia(compiled_modules=False)"
+        python -c "from julia.api import Julia; jl = Julia(runtime='/usr/bin/julia', compiled_modules=False)"
 
     - name: Run Pytest
       run: |
