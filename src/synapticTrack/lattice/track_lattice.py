@@ -18,14 +18,16 @@ class Lattice(list):
             print(f"{i:03d}. ", end="")
             elem.print_element()
 
-    def write(self, filename="sclinac.dat", load_beam=True):
+    def write(self, filename="sclinac.dat", load_beam=None):
         with open(filename, "w") as f:
-            if load_beam:
-                f.write("2    scrch\n")
+            if isinstance(load_beam, int):
+                f.write(f"{load_beam}    scrch\n")
 
             for elem in self:
                 f.write(elem.to_line() + "\n")
 
+            if isinstance(load_beam, int):
+                f.write(f"{-load_beam - 1}    scrch\n")
             f.write("0    stop")
 
 

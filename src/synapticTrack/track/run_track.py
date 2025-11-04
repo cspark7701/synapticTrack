@@ -6,7 +6,7 @@ import platform
 output_list = ["sclinac.dat", "lost.out", "linac.dat", "ini_dis.dat", "step.out", "refp.out",
                "beam.out", "coord.out", "read_dis.out", "log.out", "sc_warn.out"]
 
-def run_track(track_exe_path="TRACKv39C.exe", input_dir=".", output_dir=None):
+def run_track(track_exe_path="TRACKv39C.exe", input_dir=".", output_dir=None, verbose=False):
     """
     Run TRACK simulation using TRACKv39C.exe.
     
@@ -38,8 +38,9 @@ def run_track(track_exe_path="TRACKv39C.exe", input_dir=".", output_dir=None):
             raise FileNotFoundError(f"{track_extra_path} is missing.")
 
     system = platform.system()
-    print(f"Detected OS: {system}")
-    print(f"Running TRACK in directory: {os.path.abspath(input_dir)}")
+    if verbose:
+        print(f"Detected OS: {system}")
+        print(f"Running TRACK in directory: {os.path.abspath(input_dir)}")
 
     if system == "Linux":
         cmd = ["wine", track_exe_path]
@@ -49,15 +50,20 @@ def run_track(track_exe_path="TRACKv39C.exe", input_dir=".", output_dir=None):
         raise RuntimeError(f"Unsupported platform: {system}")
 
     try:
-        subprocess.run(cmd, cwd=input_dir, check=True)
-        print("TRACK simulation completed successfully.")
+        if verbose:
+            subprocess.run(cmd, cwd=input_dir, check=True)
+        else:
+            subprocess.run(cmd, cwd=input_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        if verbose: print("TRACK simulation completed successfully.")
         if output_dir != None:
             os.makedirs(output_dir, exist_ok=True)
             move_output_files(output_dir)
-            print("TRACK simulation outputs moved successfully")
+            if verbose: print("TRACK simulation outputs moved successfully")
     except subprocess.CalledProcessError as e:
-        print("TRACK simulation failed.")
+        if verbose: print("TRACK simulation failed.")
         raise e
+
+#shutil.copy(src, dst)
 
 def move_output_files(dest_dir):
     for output_file in output_list:
@@ -72,7 +78,7 @@ def clean_results(input_dir="."):
     print(f"Cleanup previous outputs")
     for output_file in output_list:
         try:
-            os.remove(output_file)
+            os.remove(os.path.join(input_dir, output_file))
             print(f"    Successfully deleted {output_file}")
         except FileNotFoundError:
             print(f"    Error: {output_file} not found.")

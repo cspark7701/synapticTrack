@@ -3,9 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 
 from synapticTrack.utils import gaussian
-from synapticTrack.visualizations.plot_phasespace import phasespace_plot
 
-def wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y, filename):
+def wire_scanner_plot(x_pos, x_curr, x_center, popt_x, y_pos, y_curr, y_center, popt_y, filename):
     """
     Plot wire scanner data for X and Y axes with Gaussian fits.
 
@@ -20,16 +19,20 @@ def wire_scanner_plot(x_pos, x_curr, popt_x, y_pos, y_curr, popt_y, filename):
 
     fig, axs = plt.subplots(1, 2, figsize=(12, 5))
 
-    axs[0].plot(x_pos, np.abs(x_curr), 'o', label='Data')
+    axs[0].plot(x_pos, x_curr, 'o', label='Data')
     axs[0].plot(x_pos, gaussian(x_pos, *popt_x), '-', label='Gaussian Fit')
+    axs[0].axvline(x_center, c='r', label=r'$x_{\text{center}}$')
+    #axs[0].axvline(popt_x[1], c='g', label=r'$x_{\text{center, fit}}$')
     axs[0].set_title("X Wire Scanner")
     axs[0].set_xlabel("Position [mm]")
     axs[0].set_ylabel("Current [A]")
     axs[0].legend()
     axs[0].grid(True)
 
-    axs[1].plot(y_pos, np.abs(y_curr), 'o', label='Data')
+    axs[1].plot(y_pos, y_curr, 'o', label='Data')
     axs[1].plot(y_pos, gaussian(y_pos, *popt_y), '-', label='Gaussian Fit')
+    axs[1].axvline(y_center, c='r', label=r'$y_{\text{center}}$')
+    #axs[1].axvline(popt_y[1], c='g', label=r'$y_{\text{center, fit}}$')
     axs[1].set_title("Y Wire Scanner")
     axs[1].set_xlabel("Position [mm]")
     axs[1].set_ylabel("Current [A]")
