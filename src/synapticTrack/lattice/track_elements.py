@@ -96,6 +96,7 @@ class EQuad(Element):
     def to_line(self):
         return f"0    equad    {self.Vf:.6f}    {self.length:.6f}    {self.Heff:.6f}    {self.Ra:.2f}    {self.nstep}"
 
+
 class Corr(Element):
     def __init__(self, name, length, FH, FV, Ra=0, nstep=0, FHkick=0, FVkick=0):
         #n  CORR  L  FH FB rapC nstep FHkick FVkick
@@ -108,7 +109,6 @@ class Corr(Element):
         self.nstep = nstep
         self.FHkick = FHkick
         self.FVkick = FVkick
-
 
     def print_element(self):
         print(f"Steering {self.name}: L={self.length} cm, BYmax={self.FH} G, BXmax={self.FV} G, Ra={self.Ra} cm, Steps={self.nstep}, FHkick={self.FHkick}, FVkick={self.FVkick}")
@@ -126,6 +126,7 @@ class Marker(Element):
     def to_line(self):
         return f"0    marker"
 
+
 class Scanner(Element):
     def __init__(self, name, scanner_type):
         super().__init__(name, "scanner", length=0.0)
@@ -133,7 +134,6 @@ class Scanner(Element):
 
     def print_element(self):
         print(f"Scanner {self.name}: Type={self.scanner_type}")
-
 
     def to_line(self):
         return f"0    diagn    {self.scanner_type}    3"
