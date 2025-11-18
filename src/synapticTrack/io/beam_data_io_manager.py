@@ -50,16 +50,40 @@ class BeamDataIOManager:
         Returns:
             Beam: A Beam object with data and metadata
         """
-        json_path = splitext(filename)[0] + ".json"
-        if exists(json_path):
-            metadata = cls.read_metadata(filename)
-            mass_number = metadata["mass_number"]
-            charge_state = metadata["charge_state"]
-            beam_current = metadata["beam_current"]
-            reference_energy = metadata["reference_energy"]
 
-        if None in (mass_number, charge_state, beam_current, reference_energy):
-            raise ValueError("Missing beam parameters and no metadata file found.")
+        json_path = splitext(filename)[0] + ".json"
+
+        if exists(json_path):
+            try:
+                # read_beam_metadata should accept a filename/path to the json
+                metadata = cls.read_beam_metadata(json_path)
+            except Exception as e:
+                raise ValueError(f"Failed to read metadata from '{json_path}': {e}") from e
+
+            def _to_int(val, name):
+                if val is None:
+                    return None
+                try:
+                    return int(val)
+                except Exception:
+                    raise ValueError(f"Invalid integer for '{name}': {val}")
+
+            def _to_float(val, name):
+                if val is None:
+                    return None
+                try:
+                    return float(val)
+                except Exception:
+                    raise ValueError(f"Invalid float for '{name}': {val}")
+
+            # Use metadata values if present, otherwise keep passed-in values
+            mass_number = _to_int(metadata.get("mass_number", mass_number), "mass_number")
+            charge_state = _to_int(metadata.get("charge_state", charge_state), "charge_state")
+            beam_current = _to_float(metadata.get("beam_current", beam_current), "beam_current")
+            reference_energy = _to_float(metadata.get("reference_energy", reference_energy), "reference_energy")
+
+        if code not in cls.code_readers:
+            raise KeyError(f"No reader registered for code '{code}'")
 
         return cls.code_readers[code](filename, mass_number, charge_state, beam_current, reference_energy)
 
