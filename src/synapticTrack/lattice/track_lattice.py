@@ -30,50 +30,112 @@ class Lattice(list):
                 f.write(f"{-load_beam - 1}    scrch\n")
             f.write("0    stop")
 
+    @classmethod
+    def parse(cls, filename: str = "sclinac.dat"):
+        """
+        Parse a TRACK lattice file and return a Lattice instance.
 
-    def parse(self, filename="sclinac.dat"):
-        self.elements = []
+        Raises ValueError (or IndexError) on malformed lines.
+        """
+        lattice = cls()
+
         with open(filename, "r") as f:
-            for line in f:
+            for lineno, line in enumerate(f, start=1):
                 line = line.strip()
- 
+                # Skip empty lines and comments
                 if not line or line.startswith("!"):
                     continue
 
                 tokens = line.split()
+
+                # Need at least an index + keyword
+                if len(tokens) < 2:
+                    raise ValueError(f"Malformed lattice line {lineno}: {line}")
+
                 keyword = tokens[1].lower()
 
-                if keyword == "drift":
-                    elem = Drift(name="drift", length_cm=float(tokens[2]),
-                                          rx_cm=float(tokens[3]), ry_cm=float(tokens[4]),
-                                          nstep=int(tokens[5]) if len(tokens) > 5 else None)
-                elif keyword == "bmag":
-                    elem = BMag(name="bmag", length_cm=float(tokens[2]),
-                                         rbend_cm=float(tokens[3]), theta_deg=float(tokens[4]),
-                                         airgap_cm=float(tokens[5]), width_cm=float(tokens[6]),
-                                         beta1_deg=float(tokens[7]), beta2_deg=float(tokens[8]),
-                                         r1_inv=float(tokens[9]) if len(tokens) > 9 else 0.0,
-                                         r2_inv=float(tokens[10]) if len(tokens) > 10 else 0.0,
-                                         nstep=int(tokens[11]) if len(tokens) > 11 else None)
-                elif keyword == "quad":
-                    elem = Quad(name="quad", Bq_G=float(tokens[2]), length_cm=float(tokens[3]),
-                                         Heff_cm=float(tokens[4]), Ra_cm=float(tokens[5]),
-                                         nstep=int(tokens[6]))
-                elif keyword == "equad":
-                    elem = EQuad(name="equad", Vf=float(tokens[2]), length_cm=float(tokens[3]),
-                                          Heff_cm=float(tokens[4]), Ra_cm=float(tokens[5]),
-                                          nstep=int(tokens[6]))
-                elif keyword == "marker":
-                    elem = Marker(name="marker")
-                elif keyword == "stM":
-                    elem = SteeringMagnet(name="stM")
-                elif keyword == "diagn":
-                    elem = Scanner(name="diagn", scanner_type=str(tokens[2]))
-                elif keyword == "scrch":
-                    continue
-                elif keyword == "stop":
-                    continue
-                else:
-                    raise ValueError(f"Unsupported element tyep: {keyword}")
+                try:
+                    if keyword == "drift":
+                        # index  keyword  L(cm)  Rx(cm)  Ry(cm)  nstep(optional)
+                        if len(tokens) < 5:
+                            raise ValueError
+                        elem = Drift(
+                            name="drift",
+                            length_cm=float(tokens[2]),
+                            rx_cm=float(tokens[3]),
+                            ry_cm=float(tokens[4]),
+                            nstep=int(tokens[5]) if len(tokens) > 5 else None,
+                        )
 
-                self.add_element(elem)
+                    elif keyword == "bmag":
+                        # index  keyword  L  Rbend  theta  gap  width  beta1  beta2 [r1_inv] [r2_inv] [nstep]
+                        if len(tokens) < 9:
+                            raise ValueError
+                        elem = BMag(
+                            name="bmag",
+                            length_cm=float(tokens[2]),
+                            rbend_cm=float(tokens[3]),
+                            theta_deg=float(tokens[4]),
+                            airgap_cm=float(tokens[5]),
+                            width_cm=float(tokens[6]),
+                            beta1_deg=float(tokens[7]),
+                            beta2_deg=float(tokens[8]),
+                            r1_inv=float(tokens[9]) if len(tokens) > 9 else 0.0,
+                            r2_inv=float(tokens[10]) if len(tokens) > 10 else 0.0,
+                            nstep=int(tokens[11]) if len(tokens) > 11 else None,
+                        )
+
+                    elif keyword == "quad":
+                        # index  keyword  Bq  L  Heff  Ra  nstep
+                        if len(tokens) < 7:
+                            raise ValueError
+                        elem = Quad(
+                            name="quad",
+                            Bq_G=float(tokens[2]),
+                            length_cm=float(tokens[3]),
+                            Heff_cm=float(tokens[4]),
+                            Ra_cm=float(tokens[5]),
+                            nstep=int(tokens[6]),
+                        )
+
+                    elif keyword == "equad":
+                        # index  keyword  Vf  L  Heff  Ra  nstep
+                        if len(tokens) < 7:
+                            raise ValueError
+                        elem = EQuad(
+                            name="equad",
+                            Vf=float(tokens[2]),
+                            length_cm=float(tokens[3]),
+                            Heff_cm=float(tokens[4]),
+                            Ra_cm=float(tokens[5]),
+                            nstep=int(tokens[6]),
+                        )
+
+                    elif keyword == "marker":
+                        elem = Marker(name="marker")
+
+                    elif keyword == "stm":  # 'stM' -> lowered to 'stm'
+                        elem = SteeringMagnet(name="stm")
+
+                    elif keyword == "diagn":
+                        # index  keyword  type
+                        if len(tokens) < 3:
+                            raise ValueError
+                        elem = Scanner(name="diagn", scanner_type=str(tokens[2]))
+
+                    elif keyword in {"scrch", "stop"}:
+                        # TRACK control lines; skip
+                        continue
+
+                    else:
+                        raise ValueError(f"Unsupported element type: {keyword}")
+
+                except (IndexError, ValueError) as exc:
+                    # Wrap any parsing issues as ValueError with line info
+                    raise ValueError(
+                        f"Malformed lattice line {lineno}: {line}"
+                    ) from exc
+
+                lattice.append(elem)
+
+        return lattice
