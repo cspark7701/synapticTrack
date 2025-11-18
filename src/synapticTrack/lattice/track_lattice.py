@@ -74,6 +74,6 @@ class Lattice(list):
                 elif keyword == "stop":
                     continue
                 else:
-                    raise VlaueError(f"Unsupported element tyep: {keyword}")
+                    raise ValueError(f"Unsupported element tyep: {keyword}")
 
                 self.add_element(elem)
