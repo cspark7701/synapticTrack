@@ -29,8 +29,10 @@ def test_wire_scanner_analysis(wire_scanner_dir, wire_scanner_filename):
     assert "y_center" in results
     assert "sigma_x" in results
     assert "sigma_y" in results
-    assert "gaussian_sigma_x_fit" in results
-    assert "gaussian_sigma_y_fit" in results
+    assert "gaussian_fit_x_center" in results
+    assert "gaussian_fit_y_center" in results
+    assert "gaussian_fit_sigma_x" in results
+    assert "gaussian_fit_sigma_y" in results
 
 @pytest.fixture
 def allison_scanner_dir():
@@ -53,8 +55,10 @@ def test_allison_scanner_analysis(allison_scanner_dir, allison_scanner_filename)
     assert "xp_center" in results
     assert "sigma_x" in results
     assert "sigma_xp" in results
-    assert "gaussian_sigma_x_fit" in results
-    assert "gaussian_sigma_xp_fit" in results
+    assert "gaussian_fit_x_center" in results
+    assert "gaussian_fit_xp_center" in results
+    assert "gaussian_fit_sigma_x" in results
+    assert "gaussian_fit_sigma_xp" in results
     assert "covariance_x_xp" in results
     assert "emittance_rms" in results
     assert "emittance_geometric" in results
