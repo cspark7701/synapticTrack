@@ -2,9 +2,9 @@
 
 from synapticTrack.beam import track_reader #, opal_reader
 from synapticTrack.analysis import scanner_analysis #diagnostics
-#from synapticTrack.correctbeamn import orbit_correction
-#from synapticTrack.ml import models, inference
-from synapticTrack.visualizatbeamns import plot_phasespace, plot_scanner
+from synapticTrack.io.track_io import TrackIO
+from synapticTrack.analysis import scanner_analysis
+from synapticTrack.visualizations import plot_phasespace, plot_scanner
 
 def run_all(input_file, model_file=None, output_dir="results/"):
     """
