@@ -1,5 +1,5 @@
 import os
-import subprocess
+import json
 from typing import List
 from .track_elements import *
 
@@ -18,7 +18,13 @@ class Lattice(list):
             print(f"{i:03d}. ", end="")
             elem.print_element()
 
-    def write(self, filename="sclinac.dat", load_beam=None):
+    def write(self, filename: str = "sclinac.dat", load_beam=None):
+        """
+        Write lattice in TRACK format to the given filename.
+        load_beam : int
+            Initial beam distribution number
+            Will be used for output beam distribution number (load_beam + 1)
+        """
         with open(filename, "w") as f:
             if isinstance(load_beam, int):
                 f.write(f"{load_beam}    scrch\n")
@@ -28,7 +34,49 @@ class Lattice(list):
 
             if isinstance(load_beam, int):
                 f.write(f"{-load_beam - 1}    scrch\n")
+
             f.write("0    stop")
+
+    def write_stl(self, filename: str, load_beam=None):
+        """
+        Write lattice to a file with .stl extension, using TRACK text format.
+
+        Parameters
+        ----------
+        filename : str
+            Base filename or path. If it does not end with '.stl', the extension
+            will be appended automatically.
+        load_beam : int or None
+            Optional TRACK 'scrch' control flag, passed through to write().
+        """
+        base, ext = os.path.splitext(filename)
+        if ext.lower() != ".stl":
+            filename = base + ".stl"
+        self.write(filename=filename, load_beam=load_beam)
+
+    def to_json(self, filename: str):
+        """
+        Save lattice to a JSON file.
+
+        The file will contain a list of element dictionaries.
+        """
+        data = [elem.to_dict() for elem in self]
+        with open(filename, "w") as f:
+            json.dump(data, f, indent=2)
+
+    @classmethod
+    def from_json(cls, filename: str) -> "Lattice":
+        """
+        Load a lattice from a JSON file created by to_json().
+        """
+        with open(filename, "r") as f:
+            data = json.load(f)
+
+        lattice = cls()
+        for elem_dict in data:
+            elem = Element.from_dict(elem_dict)
+            lattice.append(elem)
+        return lattice
 
     @classmethod
     def parse(cls, filename: str = "sclinac.dat"):
@@ -61,9 +109,9 @@ class Lattice(list):
                             raise ValueError
                         elem = Drift(
                             name="drift",
-                            length_cm=float(tokens[2]),
-                            rx_cm=float(tokens[3]),
-                            ry_cm=float(tokens[4]),
+                            length=float(tokens[2]),
+                            rx=float(tokens[3]),
+                            ry=float(tokens[4]),
                             nstep=int(tokens[5]) if len(tokens) > 5 else None,
                         )
 
@@ -73,11 +121,11 @@ class Lattice(list):
                             raise ValueError
                         elem = BMag(
                             name="bmag",
-                            length_cm=float(tokens[2]),
-                            rbend_cm=float(tokens[3]),
+                            length=float(tokens[2]),
+                            rbend=float(tokens[3]),
                             theta_deg=float(tokens[4]),
-                            airgap_cm=float(tokens[5]),
-                            width_cm=float(tokens[6]),
+                            airgap=float(tokens[5]),
+                            width=float(tokens[6]),
                             beta1_deg=float(tokens[7]),
                             beta2_deg=float(tokens[8]),
                             r1_inv=float(tokens[9]) if len(tokens) > 9 else 0.0,
@@ -92,9 +140,9 @@ class Lattice(list):
                         elem = Quad(
                             name="quad",
                             Bq_G=float(tokens[2]),
-                            length_cm=float(tokens[3]),
-                            Heff_cm=float(tokens[4]),
-                            Ra_cm=float(tokens[5]),
+                            length=float(tokens[3]),
+                            Heff=float(tokens[4]),
+                            Ra=float(tokens[5]),
                             nstep=int(tokens[6]),
                         )
 
@@ -105,9 +153,9 @@ class Lattice(list):
                         elem = EQuad(
                             name="equad",
                             Vf=float(tokens[2]),
-                            length_cm=float(tokens[3]),
-                            Heff_cm=float(tokens[4]),
-                            Ra_cm=float(tokens[5]),
+                            length=float(tokens[3]),
+                            Heff=float(tokens[4]),
+                            Ra=float(tokens[5]),
                             nstep=int(tokens[6]),
                         )
 
