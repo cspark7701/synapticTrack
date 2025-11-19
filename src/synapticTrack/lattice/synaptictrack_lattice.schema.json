@@ -1,0 +1,219 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/synaptictrack-lattice.schema.json",
+  "title": "synapticTrack TRACK Lattice",
+  "description": "Lattice description for synapticTrack, serialized from Lattice.to_json().",
+  "type": "array",
+
+  "items": {
+    "type": "object",
+    "description": "One lattice element.",
+    "oneOf": [
+      { "$ref": "#/$defs/Drift" },
+      { "$ref": "#/$defs/BMag" },
+      { "$ref": "#/$defs/Quad" },
+      { "$ref": "#/$defs/EQuad" },
+      { "$ref": "#/$defs/Corr" },
+      { "$ref": "#/$defs/Marker" },
+      { "$ref": "#/$defs/Scanner" }
+    ]
+  },
+
+  "$defs": {
+    "BaseElement": {
+      "type": "object",
+      "properties": {
+        "elem_type": {
+          "type": "string",
+          "description": "Element type identifier."
+        },
+        "name": {
+          "type": "string",
+          "description": "Element name (label in lattice)."
+        },
+        "length": {
+          "type": "number",
+          "description": "Element length in cm."
+        }
+      },
+      "required": ["elem_type", "name", "length"],
+      "additionalProperties": false
+    },
+
+    "Drift": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseElement" },
+        {
+          "properties": {
+            "elem_type": { "const": "drift" },
+            "rx": {
+              "type": "number",
+              "description": "Rx aperture radius [cm]."
+            },
+            "ry": {
+              "type": "number",
+              "description": "Ry aperture radius [cm]."
+            },
+            "nstep": {
+              "type": ["integer", "null"],
+              "description": "Optional integration steps."
+            }
+          },
+          "required": ["elem_type"],
+          "additionalProperties": false
+        }
+      ]
+    },
+
+    "BMag": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseElement" },
+        {
+          "properties": {
+            "elem_type": { "const": "bmag" },
+            "rbend":       { "type": "number", "description": "Bend radius [cm]." },
+            "theta_deg":   { "type": "number", "description": "Bend angle [deg]." },
+            "airgap":      { "type": "number", "description": "Magnet gap [cm]." },
+            "width":       { "type": "number", "description": "Pole width [cm]." },
+            "beta1_deg":   { "type": "number", "description": "Entrance angle [deg]." },
+            "beta2_deg":   { "type": "number", "description": "Exit angle [deg]." },
+            "r1_inv":      { "type": "number", "description": "Entrance curvature [1/cm]." },
+            "r2_inv":      { "type": "number", "description": "Exit curvature [1/cm]." },
+            "nstep":       { "type": ["integer", "null"], "description": "Optional integration steps." }
+          },
+          "required": [
+            "elem_type", "rbend", "theta_deg",
+            "airgap", "width", "beta1_deg", "beta2_deg"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+
+    "Quad": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseElement" },
+        {
+          "properties": {
+            "elem_type": { "const": "quad" },
+            "Bq_G": {
+              "type": "number",
+              "description": "Quadrupole gradient [G]."
+            },
+            "Heff": {
+              "type": "number",
+              "description": "Effective length [cm]."
+            },
+            "Ra": {
+              "type": "number",
+              "description": "Aperture radius [cm]."
+            },
+            "nstep": {
+              "type": ["integer", "null"],
+              "description": "Integration steps (default 10)."
+            }
+          },
+          "required": ["elem_type", "Bq_G", "Heff", "Ra"],
+          "additionalProperties": false
+        }
+      ]
+    },
+
+    "EQuad": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseElement" },
+        {
+          "properties": {
+            "elem_type": { "const": "equad" },
+            "Vf": {
+              "type": "number",
+              "description": "Electrostatic quadrupole voltage [V]."
+            },
+            "Heff": {
+              "type": "number",
+              "description": "Effective length [cm]."
+            },
+            "Ra": {
+              "type": "number",
+              "description": "Aperture radius [cm]."
+            },
+            "nstep": {
+              "type": ["integer", "null"],
+              "description": "Integration steps (default 10)."
+            }
+          },
+          "required": ["elem_type", "Vf", "Heff", "Ra"],
+          "additionalProperties": false
+        }
+      ]
+    },
+
+    "Corr": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseElement" },
+        {
+          "properties": {
+            "elem_type": { "const": "stm" },
+            "FH": {
+              "type": "number",
+              "description": "BYmax [G] (horizontal steering field)."
+            },
+            "FV": {
+              "type": "number",
+              "description": "BXmax [G] (vertical steering field)."
+            },
+            "Ra": {
+              "type": "number",
+              "description": "Aperture radius [cm]."
+            },
+            "nstep": {
+              "type": "integer",
+              "description": "Integration steps."
+            },
+            "FHkick": {
+              "type": "number",
+              "description": "Horizontal kick flag/value."
+            },
+            "FVkick": {
+              "type": "number",
+              "description": "Vertical kick flag/value."
+            }
+          },
+          "required": ["elem_type", "FH", "FV"],
+          "additionalProperties": false
+        }
+      ]
+    },
+
+    "Marker": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseElement" },
+        {
+          "properties": {
+            "elem_type": { "const": "marker" }
+          },
+          "required": ["elem_type"],
+          "additionalProperties": false
+        }
+      ]
+    },
+
+    "Scanner": {
+      "allOf": [
+        { "$ref": "#/$defs/BaseElement" },
+        {
+          "properties": {
+            "elem_type": { "const": "scanner" },
+            "scanner_type": {
+              "type": "string",
+              "description": "Scanner type (e.g. 'WS', 'AS')."
+            }
+          },
+          "required": ["elem_type", "scanner_type"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
+
