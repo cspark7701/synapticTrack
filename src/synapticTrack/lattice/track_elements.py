@@ -233,9 +233,15 @@ class EQuad(Element):
 
 class Corr(Element):
     def __init__(self, name, length, FH, FV, Ra=0, nstep=0, FHkick=0, FVkick=0):
-        #n  CORR  L  FH FB rapC nstep FHkick FVkick
-        # FH: BYmax[G]
-        # FV: BXmax[G]
+        """
+        n  CORR  L  FH FB rapC nstep FHkick FVkick
+        FH[mrad]: maximum horizontal corrector strengths for transverse correction procedure if FHkick>0.
+                  actual corrector strength if FHkick=0. 
+        FV[mrad]: maximum vertical corretor strenghts for transverse correction procedure if FVkick>0.
+                  actual corrector strength if FVkick=0.
+        FHkick[mrad] : horizontal corrector strength for transfer function calculation.
+        FVkick[mrad] : vertical corrector strength for transfer function calculation.
+        """
         super().__init__(name, "stM", length=length)
         self.FH = FH
         self.FV = FV
@@ -246,8 +252,8 @@ class Corr(Element):
 
     def print_element(self):
         print(
-            f"Steering {self.name}: L={self.length} cm, BYmax={self.FH} G, BXmax={self.FV} G, "
-            f"Ra={self.Ra} cm, Steps={self.nstep}, FHkick={self.FHkick}, FVkick={self.FVkick}"
+            f"Steering {self.name}: L={self.length} cm, FH={self.FH} mrad, FV={self.FV} mrad, "
+            f"Ra={self.Ra} cm, Steps={self.nstep}, FHkick={self.FHkick} mrad, FVkick={self.FVkick} mrad"
         )
 
     def to_line(self):

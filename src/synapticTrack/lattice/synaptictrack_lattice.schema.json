@@ -156,11 +156,11 @@
             "elem_type": { "const": "stm" },
             "FH": {
               "type": "number",
-              "description": "BYmax [G] (horizontal steering field)."
+              "description": "FH [mrad] (horizontal steering strength)."
             },
             "FV": {
               "type": "number",
-              "description": "BXmax [G] (vertical steering field)."
+              "description": "FV [mrad] (vertical steering strength)."
             },
             "Ra": {
               "type": "number",
