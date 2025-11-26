@@ -8,6 +8,9 @@ from synapticTrack.lattice.track_lattice import Lattice
 from synapticTrack.track.run_track import *
 
 def load_LEBT_lattice():
+    """
+    Load RAON's LEBT lattice segments and create steering magnet list
+    """
     elements_list = []
     stms = []
     for i in range(0, 6):
