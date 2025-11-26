@@ -1,0 +1,11 @@
+run.*
+stm.*
+
+scratch.#03
+scratch.#04
+scratch.#05
+scratch.#06
+scratch.#07
+scratch.#08
+
+*.npy

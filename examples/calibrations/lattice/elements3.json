@@ -1,0 +1,63 @@
+[
+  {
+    "elem_type": "drift",
+    "name": "d15",
+    "length": 105.3,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq10",
+    "length": 10.0,
+    "Vf": 11452.67104,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d16",
+    "length": 8.0,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq11",
+    "length": 10.0,
+    "Vf": -11905.17808,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d17",
+    "length": 18.955,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "stM",
+    "name": "stm4",
+    "length": 0.0,
+    "FH": 5.0,
+    "FV": 5.0,
+    "Ra": 6.0,
+    "nstep": 0,
+    "FHkick": 0.0,
+    "FVkick": 0.0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d18",
+    "length": 82.445,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  }
+]

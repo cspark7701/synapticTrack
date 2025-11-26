@@ -1,0 +1,68 @@
+[
+  {
+    "elem_type": "drift",
+    "name": "d01",
+    "length": 19.44,
+    "rx": 5,
+    "ry": 5,
+    "nstep": null
+  },
+  {
+    "elem_type": "quad",
+    "name": "q1",
+    "length": 14.4,
+    "Bq_G": 0.0,
+    "Heff": 14.4,
+    "Ra": 4.2,
+    "nstep": 100
+  },
+  {
+    "elem_type": "drift",
+    "name": "d02",
+    "length": 9.05,
+    "rx": 5,
+    "ry": 5,
+    "nstep": null
+  },
+  {
+    "elem_type": "bmag",
+    "name": "bmag1",
+    "length": 102.831853,
+    "rbend": 40.0,
+    "theta_deg": -90,
+    "airgap": 9.0,
+    "width": 18.0,
+    "beta1_deg": 25.4495,
+    "beta2_deg": 25.4495,
+    "r1_inv": 0.0,
+    "r2_inv": 0.0,
+    "nstep": 100
+  },
+  {
+    "elem_type": "drift",
+    "name": "d03",
+    "length": 15.5,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "stM",
+    "name": "stm0",
+    "length": 0.0,
+    "FH": 5.0,
+    "FV": 5.0,
+    "Ra": 6.0,
+    "nstep": 0,
+    "FHkick": 0.0,
+    "FVkick": 0.0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d04",
+    "length": 36.9,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  }
+]

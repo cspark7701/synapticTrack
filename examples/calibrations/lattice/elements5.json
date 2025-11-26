@@ -1,0 +1,95 @@
+[
+  {
+    "elem_type": "drift",
+    "name": "d19",
+    "length": 24.6,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq14",
+    "length": 10.0,
+    "Vf": -4086.62666,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d16",
+    "length": 8.0,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq15",
+    "length": 10.0,
+    "Vf": 6682.25124,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d21",
+    "length": 25.0,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq16",
+    "length": 10.0,
+    "Vf": -15798.80806,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d16",
+    "length": 8.0,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq17",
+    "length": 10.0,
+    "Vf": 17848.93706,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d22",
+    "length": 24.665,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "quad",
+    "name": "q2",
+    "length": 7.67,
+    "Bq_G": -978.29543,
+    "Heff": 7.67,
+    "Ra": 3.0,
+    "nstep": 100
+  },
+  {
+    "elem_type": "drift",
+    "name": "d23",
+    "length": 13.665,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  }
+]

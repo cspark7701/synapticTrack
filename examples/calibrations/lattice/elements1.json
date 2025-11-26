@@ -1,0 +1,80 @@
+[
+  {
+    "elem_type": "drift",
+    "name": "d05",
+    "length": 23.1,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq01",
+    "length": 10.0,
+    "Vf": -8149.25,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d06",
+    "length": 10.0,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq02",
+    "length": 10.0,
+    "Vf": 14201.69,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d06",
+    "length": 10.0,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "equad",
+    "name": "eq03",
+    "length": 10.0,
+    "Vf": -7506.06,
+    "Heff": 10.0,
+    "Ra": 6.0,
+    "nstep": 0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d07",
+    "length": 19.655,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  },
+  {
+    "elem_type": "stM",
+    "name": "stm1",
+    "length": 0.0,
+    "FH": 5.0,
+    "FV": 5.0,
+    "Ra": 6.0,
+    "nstep": 0,
+    "FHkick": 0.0,
+    "FVkick": 0.0
+  },
+  {
+    "elem_type": "drift",
+    "name": "d08",
+    "length": 109.945,
+    "rx": 6,
+    "ry": 6,
+    "nstep": null
+  }
+]
