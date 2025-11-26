@@ -10,8 +10,8 @@ def test_read_without_json(tmp_path, monkeypatch):
     data_file = tmp_path / "beam.dat"
     data_file.write_text("dummy data")
     # register a simple reader for test code
-    BeamDataIOManager.code_readers = {"testcode": _simple_reader}
-    res = BeamDataIOManager.read("testcode", str(data_file),
+    BeamDataIOManager.code_readers = {"track": _simple_reader}
+    res = BeamDataIOManager.read("track", str(data_file),
                                  mass_number=1, charge_state=2,
                                  beam_current=0.5, reference_energy=3.0)
     assert res == (str(data_file), 1, 2, 0.5, 3.0)
@@ -22,8 +22,8 @@ def test_read_with_json_overrides(tmp_path):
     json_file = tmp_path / "beam.json"
     metadata = {"mass_number": "7", "beam_current": 1.23}
     json_file.write_text(json.dumps(metadata))
-    BeamDataIOManager.code_readers = {"testcode": _simple_reader}
-    res = BeamDataIOManager.read("testcode", str(data_file),
+    BeamDataIOManager.code_readers = {"track": _simple_reader}
+    res = BeamDataIOManager.read("track", str(data_file),
                                  mass_number=1, charge_state=2,
                                  beam_current=0.5, reference_energy=3.0)
     # mass_number overridden -> int(7), beam_current overridden -> float(1.23)
@@ -36,6 +36,6 @@ def test_read_with_bad_types_in_json_raises(tmp_path):
     # invalid mass_number that cannot be converted to int
     metadata = {"mass_number": "not-an-int"}
     json_file.write_text(json.dumps(metadata))
-    BeamDataIOManager.code_readers = {"testcode": _simple_reader}
+    BeamDataIOManager.code_readers = {"track": _simple_reader}
     with pytest.raises(ValueError):
-        BeamDataIOManager.read("testcode", str(data_file))
+        BeamDataIOManager.read("track", str(data_file))

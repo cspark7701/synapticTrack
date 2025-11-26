@@ -5,8 +5,8 @@ import json
 from typing import Union
 from scipy.constants import c, physical_constants
 
-from synapticTrack.beam import *
-from synapticTrack.io import *
+from synapticTrack.beam import Beam, BeamWS, BeamAS, Twiss
+from synapticTrack.io import TrackIO, JuTrackIO, OPALIO, FlameIO, ScannerIO
 
 amu = physical_constants['atomic mass constant energy equivalent in MeV'][0]
 
@@ -81,18 +81,20 @@ class BeamDataIOManager:
             charge_state = _to_int(metadata.get("charge_state", charge_state), "charge_state")
             beam_current = _to_float(metadata.get("beam_current", beam_current), "beam_current")
             reference_energy = _to_float(metadata.get("reference_energy", reference_energy), "reference_energy")
+        if None in (mass_number, charge_state, beam_current, reference_energy):
+            raise ValueError("Missing beam parameters and no metadata file found.")
 
-        if code not in cls.code_readers:
+        if code not in cls._codes:
             raise KeyError(f"No reader registered for code '{code}'")
 
         return cls.code_readers[code](filename, mass_number, charge_state, beam_current, reference_energy)
 
     @classmethod
     def write(cls, code: str, filename: str, beam: Beam):
-        # 1. Save beam particle coordinates
+        # Save beam particle coordinates
         cls.code_writers[code](filename, beam)
 
-        # 2. Create metadata dictionary
+        # Create metadata dictionary
         def to_serializable(d):
             """Convert all values to serializable (e.g., float) format."""
             return {k: float(v) for k, v in d.items()}
@@ -111,10 +113,10 @@ class BeamDataIOManager:
             "twiss_y": to_serializable(twiss.vertical),
             "twiss_z": to_serializable(twiss.longitudinal)
         }
-        # 3. Determine JSON filename
+        # Determine JSON filename
         json_filename = splitext(filename)[0] + ".json"
 
-        # 4. Write JSON metadata
+        # Write JSON metadata
         with open(json_filename, "w") as f:
             json.dump(metadata, f, indent=4)
 

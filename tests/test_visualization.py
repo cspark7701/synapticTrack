@@ -24,6 +24,7 @@ def example_beam():
     )
 
 def test_phasespace_plot_xy(example_beam):
+    print (example_beam)
     x = example_beam.x
     xp = example_beam.xp
     with tempfile.TemporaryDirectory() as tmpdir:
