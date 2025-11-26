@@ -1,3 +1,15 @@
+beam.out
+coord.out
+linac.dat
+log.out
+lost.out
+refp.out
+sc_warn.out
+sclinac.dat
+step.out
+
+*.npy
+
 run.*
 stm.*
 
@@ -8,4 +20,3 @@ scratch.#06
 scratch.#07
 scratch.#08
 
-*.npy
