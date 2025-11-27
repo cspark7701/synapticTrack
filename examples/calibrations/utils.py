@@ -8,11 +8,9 @@ from synapticTrack.lattice.track_lattice import Lattice
 from synapticTrack.track.run_track import *
 
 def load_LEBT_lattice():
-    """
-    Load RAON's LEBT lattice segments and create steering magnet list
-    """
     elements_list = []
     stms = []
+    equads = []
     for i in range(0, 6):
         fname = f'lattice/elements{i}.json'
         elements = Lattice.from_json(fname)
@@ -21,7 +19,11 @@ def load_LEBT_lattice():
             name = elem.get_name()
             if "stm" in name:
                 stms.append(elem)
-    return (elements_list, stms)
+            elif "eq" in name:
+                equads.append(elem)
+    return (elements_list, stms, equads)
+
+
 
 def set_stm_strengths(stms, fhkick, fvkick):
     """
@@ -33,15 +35,82 @@ def set_stm_strengths(stms, fhkick, fvkick):
     fvkick: list
         list of vertical kick strengths [mrad]
     """
-    for i, stm in zip(range(0, 5), stms):
+    for i, stm in enumerate(stms):
         stms[i].FHkick = fhkick[i]
         stms[i].FVkick = fvkick[i]
 
 
-def get_beam_data(base_dir, output_files):
+def set_equad_strengths(equads, Vfs):
+    """
+    Set equads strengths
+    equads: list
+        list of equads
+    Vfs: np array
+        new equad strengths in voltages
+    """
+    for i, equad in enumerate(equads):
+        equad.Vf = Vfs[i]
+
+
+def get_z_scanner(output_dir):
+    z_scanner = []
+    with open(os.path.join(output_dir, 'z_scanner.out'), 'r') as f:
+        for line in f:
+            z_scanner.append(line.strip())
+    return (z_scanner)
+
+def create_z_scanner(elements_list, output_dir_list, final_output_dir):
+    z_scanner = []
+    lattice_length = 0
+    for elements, output_dir in zip(elements_list, output_dir_list):
+        sclinac = Lattice(elements)
+        #print('\n')
+        for elem in sclinac:
+            elem_name = elem.get_name()
+            elem_length = elem.get_length()
+            lattice_length += elem_length
+            #print (f"{elem_name}, {elem_length:3.6f}, {lattice_length*0.01:6.6f}")
+        z_scanner.append(lattice_length)
+
+    with open(os.path.join(final_output_dir, 'z_scanner.out'), 'w') as f:
+        for item in z_scanner:
+            f.write(str(item) + '\n')
+
+def get_rms_beam_size(output_dir, exclude_allison=1, verbose=0):
+
+    z_scanner = get_z_scanner(output_dir)
+    if exclude_allison:
+        z_scanner.pop(1)
+
+    coord_list = ['coord_wire_scanner1.out', 'coord_wire_scanner2.out', 'coord_wire_scanner3.out', 'coord_wire_scanner4.out']
+
+    sim_rms_size = pd.DataFrame(columns=['z', 'x', 'xp', 'y', 'yp', 'dt', 'dW'])
+    sim_rms_x = np.zeros(4, dtype=float)
+    sim_rms_y = np.zeros(4, dtype=float)
+
+    for i, file in enumerate(coord_list):
+        filename = os.path.join(output_dir, file)
+
+        beam_io_manager = BeamDataIOManager()
+        beam = beam_io_manager.read(code='track', filename=filename, mass_number=40, charge_state=8, beam_current=0, reference_energy=0.10)
+
+        sim_rms_size.loc[len(sim_rms_size)] = beam.rms_size
+        sim_rms_size.loc[i, 'z'] = float(z_scanner[i])*10
+
+        sim_rms_x[i] = sim_rms_size.loc[i, 'x']
+        sim_rms_y[i] = sim_rms_size.loc[i, 'y']
+
+        if verbose == 1:
+            print('simulation rms size')
+            print(sim_rms_size)
+
+    return (sim_rms_x, sim_rms_y)
+
+
+def get_beam_data(output_dir, output_files):
     """
     Get beam centroid data
-    base_dir: str
+    output_dir: str
         diretory for beam data
     output_files: list
         list of output files
@@ -51,7 +120,7 @@ def get_beam_data(base_dir, output_files):
     beam_centroid = pd.DataFrame(columns=['z', 'x', 'xp', 'y', 'yp', 'dt', 'dW'])
     beam_rms_size = pd.DataFrame(columns=['z', 'x', 'xp', 'y', 'yp', 'dt', 'dW'])
     for i, file in enumerate(output_files):
-        filename = os.path.join(base_dir, file)
+        filename = os.path.join(output_dir, file)
 
         beam_io_manager = BeamDataIOManager() 
         beam = beam_io_manager.read(code='track', filename=filename, mass_number=40, charge_state=8, beam_current=0, reference_energy=0.10)
