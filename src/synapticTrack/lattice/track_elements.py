@@ -230,6 +230,9 @@ class EQuad(Element):
         )
         return d
 
+    def get_Vf(self):
+        return (self.Vf)
+
 
 class Corr(Element):
     def __init__(self, name, length, FH, FV, Ra=0, nstep=0, FHkick=0, FVkick=0):
@@ -275,6 +278,18 @@ class Corr(Element):
             }
         )
         return d
+
+    def get_FH(self):
+        return (self.FH)
+
+    def get_FV(self):
+        return (self.FV)
+
+    def get_FHkick(self):
+        return (self.FHkick)
+
+    def get_FVkick(self):
+        return (self.FVkick)
 
 
 class Marker(Element):

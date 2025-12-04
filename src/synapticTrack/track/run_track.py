@@ -25,13 +25,7 @@ def run_track(track_exe_path="TRACKv39C.exe", input_dir=".", output_dir=None, ve
     if not os.path.isfile(track_beam_path):
         raise FileNotFoundError(f"{track_beam_path} is missing.")
 
-    dll_files = ["imsl_dll.dll", "libifcoremd.dll", "libifportmd.dll", "libiomp5md.dll", "libmmd.dll"]
-    for dll in dll_files:
-        track_dll_path = os.path.join(input_dir, dll)
-        if not os.path.isfile(track_dll_path):
-            raise FileNotFoundError(f"{track_dll_path} is missing.")
-
-    extra_files = ["fi_in.dat", "Graph.cfg"]
+    extra_files = ["fi_in.dat"]
     for f in extra_files:
         track_extra_path = os.path.join(input_dir, f)
         if not os.path.isfile(track_extra_path):
