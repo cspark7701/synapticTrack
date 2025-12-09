@@ -23,6 +23,7 @@ executing==2.2.0
 fastjsonschema==2.21.1
 fonttools==4.58.2
 fqdn==1.5.1
+gymnasimum==1.2.2
 h11==0.16.0
 h5py==3.14.0
 httpcore==1.0.9
@@ -108,6 +109,7 @@ stdlib-list==0.11.1
 terminado==0.18.1
 threadpoolctl==3.6.0
 tinycss2==1.4.0
+torch==2.9.1
 tornado==6.5.1
 tqdm==4.67.1
 traitlets==5.14.3

@@ -13,6 +13,8 @@ setup(
     packages=find_packages(where="src"),
     python_requires=">=3.8",
     install_requires=[
+        "torch>=2.9.1",
+        "gymnasium>=1.2.2",
         "numpy>=1.20",
         "scipy>=1.7",
         "matplotlib>=3.4",
